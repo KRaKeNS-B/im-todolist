@@ -1,6 +1,7 @@
 import Vue from 'vue';
-import ToDoBtn from '@/components/ToDoBtn.vue';
-import ToDoWrapper from '@/components/ToDoWrapper.vue';
+import store from '@/store';
+import ToDoBtn from '@/components/ToDoBtn';
+import ToDoWrapper from '@/components/ToDoWrapper';
 
 // function getCurrentCourse() {
 //   return document.body.className.match(/course-\d+/)[0];
@@ -54,5 +55,6 @@ function mountToDoWrapper() {
 mountToDoWrapper();
 
 new Vue({
+  store,
   render: (h) => h(ToDoWrapper),
 }).$mount('#todolist-wrapper');
