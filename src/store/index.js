@@ -25,7 +25,7 @@ export default new Vuex.Store({
       state.newTask.text = text;
     },
     updateTaskList(state, taskList) {
-      state.taskList = taskList;
+      state.taskList = taskList || [];
     },
   },
   actions: {
