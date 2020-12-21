@@ -27,8 +27,24 @@ export default {
     closeTodolist() {
       this.isOpen = false;
     },
+    handleRequest(request) {
+      switch (request.type) {
+        case 'getTaskList':
+        case 'taskListSaved':
+          // eslint-disable-next-line eqeqeq
+          if (request.taskList != false) {
+            this.$store.commit('updateTaskList', request.taskList);
+          }
+          break;
+        default:
+          break;
+      }
+    },
   },
   mounted() {
+    this.$store.dispatch('getTaskList');
+
+    chrome.runtime.onMessage.addListener(this.handleRequest);
     EventBus.$on('OPEN_TODOLIST', this.openTodolist);
   },
   beforeDestroy() {

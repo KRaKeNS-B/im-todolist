@@ -9,8 +9,9 @@
     </div>
     <input
       type="text"
-      v-model="taskText"
+      v-model="newTaskText"
       class="todolist__task-input"
+      placeholder="Добавить задачу"
     >
   </div>
 </template>
@@ -20,18 +21,24 @@ export default {
   name: 'NewTaskInput',
   data() {
     return {
-      taskText: '',
     };
   },
   computed: {
     isActive() {
-      return this.taskText.length > 0;
+      return this.newTaskText.length > 0;
+    },
+    newTaskText: {
+      get() {
+        return this.$store.state.newTask.text;
+      },
+      set(newValue) {
+        this.$store.commit('updateNewTaskText', newValue);
+      },
     },
   },
   methods: {
     addNewTask() {
-      this.$store.commit('addNewTaskByText', this.taskText);
-      this.taskText = '';
+      this.$store.dispatch('addNewTask');
     },
   },
 };
