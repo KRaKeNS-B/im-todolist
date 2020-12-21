@@ -1,16 +1,31 @@
 <template>
-  <div class="todolist__task">
+  <div class="todolist__task todolist__task-item">
 
-    <input type="checkbox" v-model="done">
+    <div class="todolist__task-header">
 
-    <input
-      :class="{'todolist__task-text-done': done, 'todolist__task-text': !done}"
-      type="text"
-      v-model="text"
-      class="todolist__task-input"
-      placeholder="Напишите комментарий"
-      @blur="onBlur">
+      <div style="flex-grow: 1">Public</div>
+      <div>{{task.ticketId}}</div>
 
+    </div>
+
+    <div class="todolist__task-content">
+      <input type="checkbox" v-model="done">
+
+      <input
+        :class="{
+          'todolist__task-text-done': this.done,
+          'todolist__task-text': !this.done,
+          'todolist__task-text-editing': !this.editing,
+        }"
+        type="text"
+        v-model="text"
+        class="todolist__task-input"
+        placeholder="Напишите комментарий"
+        ref="input"
+        @click="onClick"
+        @blur="onBlur"/>
+
+    </div>
   </div>
 </template>
 
@@ -22,6 +37,7 @@ export default {
       text: '',
       done: false,
       hideTimeout: null,
+      editing: false,
     };
   },
   mounted() {
@@ -40,7 +56,8 @@ export default {
     },
   },
   methods: {
-    onBlur() {
+    onBlur(e) {
+      this.editing = false;
       this.task.text = this.text;
       this.$store.dispatch('saveTasksToLocalStorage');
     },
@@ -51,6 +68,10 @@ export default {
     hide() {
       this.task.done = true;
       this.$store.dispatch('saveTasksToLocalStorage');
+    },
+    onClick() {
+      this.editing = true;
+      this.$refs.input.focus();
     },
   },
   props: {
@@ -63,7 +84,26 @@ export default {
   .todolist__task-text{
 
   }
+  .todolist__task-text-editing{
+    user-select: none;
+  }
   .todolist__task-text-done{
     text-decoration: line-through;
+  }
+  .todolist__task-item{
+    flex-direction: column;
+    align-items: start !important;
+    cursor: grab;
+  }
+  .todolist__task-header{
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    width: 100%;
+  }
+  .todolist__task-content{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 </style>

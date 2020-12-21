@@ -11,20 +11,18 @@ export default new Vuex.Store({
       messageId: 0,
       ticketId: 0,
       done: false,
-      id: 0,
+      id: new Date().getTime(), //Потом сделать autoincrement с сохранением его значения
     },
-    taskId: 0, // auto increment
   },
   mutations: {
     addNewTask(state) {
       state.taskList.push(state.newTask);
-      state.taskId += 1;
       state.newTask = {
         text: '',
         messageId: 0,
         ticketId: 0,
         done: false,
-        id: state.taskId,
+        id: new Date().getTime(),
       };
     },
     updateNewTaskText(state, text) {

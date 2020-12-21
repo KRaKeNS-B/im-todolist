@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
@@ -25,5 +26,9 @@
     "sass-loader": "^8.0.2",
     "vue-cli-plugin-browser-extension": "^0.25.1",
     "vue-template-compiler": "^2.6.11"
+  },
+  "rules": {
+    "linebreak-style": 0,
+    "max-len": false
   }
 }
