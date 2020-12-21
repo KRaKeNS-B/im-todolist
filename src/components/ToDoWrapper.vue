@@ -32,7 +32,7 @@ export default {
         case 'getTaskList':
         case 'taskListSaved':
           // eslint-disable-next-line eqeqeq
-          if (request.taskList != false) {
+          if (request.taskList) {
             this.$store.commit('updateTaskList', request.taskList);
           }
           break;
