@@ -1,10 +1,19 @@
 <template>
   <div class="todolist__tasks">
     <TodolistTask
-      v-for="(task, index) in tasks"
-      :key="index"
+      v-for="task in tasks"
+      :key="task.id"
       :task="task"
     />
+
+    <br>
+
+    <TodolistTask
+      v-for="task in tasksDone"
+      :key="task.id"
+      :task="task"
+    />
+
   </div>
 </template>
 
@@ -16,6 +25,12 @@ export default {
   components: { TodolistTask },
   computed: {
     tasks() {
+      return this.$store.state.taskList.filter((t) => !t.done);
+    },
+    tasksDone() {
+      return this.$store.state.taskList.filter((t) => t.done);
+    },
+    allTasks() {
       return this.$store.state.taskList;
     },
   },
