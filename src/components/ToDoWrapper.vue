@@ -106,7 +106,7 @@ export default {
   &-input, &-text {
     font-size: 16px;
     font-family: Roboto,sans-serif;
-    padding: 5px 17px 5px 12px;
+    padding: 10px 17px 10px 12px;
     -webkit-font-smoothing: antialiased;
     font-weight: 400;
     box-shadow: none;
@@ -120,12 +120,16 @@ export default {
     text-overflow: ellipsis;
     outline: 0;
     line-height: 20px;
+    resize: none;
+  }
+
+  &-input_textarea{
+    overflow: hidden;
   }
 
   &-text {
     cursor: default;
     word-break: break-word;
-    white-space: pre-wrap;
   }
 
   &_done {

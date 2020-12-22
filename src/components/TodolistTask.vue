@@ -12,15 +12,26 @@
     >
       {{text}}
     </span>
-    <input
+<!--    <input-->
+<!--      v-else-->
+<!--      :class="{'todolist__task_done': done}"-->
+<!--      type="text"-->
+<!--      v-model="text"-->
+<!--      class="todolist__task-input"-->
+<!--      ref="input"-->
+<!--      @blur="onBlur"-->
+<!--    />-->
+    <textarea
       v-else
       :class="{'todolist__task_done': done}"
       type="text"
       v-model="text"
-      class="todolist__task-input"
+      class="todolist__task-input todolist__task-input_textarea"
+      rows="1"
       ref="input"
       @blur="onBlur"
-    />
+      :style="inputStyle"
+    ></textarea>
     <i
       class="todolist__task-flag"
       :class="{'todolist__task-flag_active': task.important}"
@@ -40,6 +51,7 @@ export default {
       done: false,
       hideTimeout: null,
       editing: false,
+      inputStyle: '',
     };
   },
   props: {
@@ -55,6 +67,9 @@ export default {
         this.task.done = false;
         this.$store.dispatch('saveTasksToLocalStorage');
       }
+    },
+    text() {
+      this.resizeTextarea();
     },
   },
   methods: {
@@ -74,12 +89,16 @@ export default {
     onTaskTextClick() {
       this.editing = true;
       this.$nextTick(() => {
+        this.resizeTextarea();
         this.$refs.input.focus();
       });
     },
     onFlagClick() {
       this.task.important = !this.task.important;
       this.$store.dispatch('saveTasksToLocalStorage');
+    },
+    resizeTextarea() {
+      this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
     },
   },
   mounted() {
