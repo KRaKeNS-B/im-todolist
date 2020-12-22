@@ -12,6 +12,7 @@
       v-model="newTaskText"
       class="todolist__task-input"
       placeholder="Добавить задачу"
+      @keydown.enter="addNewTask"
     >
   </div>
 </template>

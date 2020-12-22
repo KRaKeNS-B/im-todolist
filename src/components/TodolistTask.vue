@@ -12,15 +12,7 @@
     >
       {{text}}
     </span>
-<!--    <input-->
-<!--      v-else-->
-<!--      :class="{'todolist__task_done': done}"-->
-<!--      type="text"-->
-<!--      v-model="text"-->
-<!--      class="todolist__task-input"-->
-<!--      ref="input"-->
-<!--      @blur="onBlur"-->
-<!--    />-->
+
     <textarea
       v-else
       :class="{'todolist__task_done': done}"
@@ -32,6 +24,7 @@
       @blur="onBlur"
       :style="inputStyle"
     ></textarea>
+
     <i
       class="todolist__task-flag"
       :class="{'todolist__task-flag_active': task.important}"
