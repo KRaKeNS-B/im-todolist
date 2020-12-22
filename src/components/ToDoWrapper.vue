@@ -129,7 +129,9 @@ export default {
 
   &-text {
     cursor: default;
+    word-wrap: break-word;
     word-break: break-word;
+    white-space: pre-line;
   }
 
   &_done {

@@ -98,7 +98,10 @@ export default {
       this.$store.dispatch('saveTasksToLocalStorage');
     },
     resizeTextarea() {
-      this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
+      this.inputStyle = this.$refs.input ? 'height:auto;' : '';
+      this.$nextTick(() => {
+        this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
+      });
     },
   },
   mounted() {
