@@ -124,6 +124,8 @@ export default {
 
   &-text {
     cursor: default;
+    word-break: break-word;
+    white-space: pre-wrap;
   }
 
   &_done {
@@ -145,6 +147,24 @@ export default {
 
   &:hover &-draggable {
     display: block;
+  }
+
+  &-flag {
+    position: absolute;
+    right: 10px;
+    height: 48px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 48px;
+    font-style: normal;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #757575;
+
+    &_active {
+      color: #EF5350;
+    }
   }
 }
 </style>

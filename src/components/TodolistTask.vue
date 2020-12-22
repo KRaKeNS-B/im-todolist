@@ -21,6 +21,13 @@
       ref="input"
       @blur="onBlur"
     />
+    <i
+      class="todolist__task-flag"
+      :class="{'todolist__task-flag_active': task.important}"
+      @click="onFlagClick"
+    >
+      &#127987;
+    </i>
   </div>
 </template>
 
@@ -69,6 +76,10 @@ export default {
       this.$nextTick(() => {
         this.$refs.input.focus();
       });
+    },
+    onFlagClick() {
+      this.task.important = !this.task.important;
+      this.$store.dispatch('saveTasksToLocalStorage');
     },
   },
   mounted() {
