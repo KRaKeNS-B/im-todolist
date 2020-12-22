@@ -10,6 +10,9 @@ export default new Vuex.Store({
       text: '',
       messageId: 0,
       ticketId: 0,
+      done: false,
+      important: false,
+      id: new Date().getTime(), // Потом сделать autoincrement с сохранением его значения
     },
   },
   mutations: {
@@ -19,13 +22,32 @@ export default new Vuex.Store({
         text: '',
         messageId: 0,
         ticketId: 0,
+        done: false,
+        important: false,
+        id: new Date().getTime(),
       };
     },
     updateNewTaskText(state, text) {
       state.newTask.text = text;
     },
     updateTaskList(state, taskList) {
-      state.taskList = taskList;
+      state.taskList = taskList
+        .filter((task) => (task || false))
+        .map(({
+          text = '',
+          messageId = 0,
+          ticketId = 0,
+          done = false,
+          important = false,
+          id = new Date().getTime(),
+        }) => ({
+          text,
+          messageId,
+          ticketId,
+          done,
+          important,
+          id,
+        }));
     },
   },
   actions: {
@@ -43,6 +65,16 @@ export default new Vuex.Store({
       chrome.runtime.sendMessage({
         type: 'getTaskList',
       });
+    },
+    moveTaskToNewPosition({ state, dispatch, commit }, { newIndex, oldIndex }) {
+      const taskList = [...state.taskList];
+      const item = taskList[oldIndex];
+
+      taskList.splice(oldIndex, 1);
+      taskList.splice(newIndex, 0, item);
+
+      commit('updateTaskList', taskList);
+      dispatch('saveTasksToLocalStorage');
     },
   },
   modules: {
