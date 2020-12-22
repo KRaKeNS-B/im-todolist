@@ -166,10 +166,15 @@ export default {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
-    color: #757575;
 
-    &_active {
-      color: #EF5350;
+    &-svg {
+      width: 16px;
+      height: 16px;
+      fill: #B0BEC5;
+
+      &_active {
+        fill: #587bd4;
+      }
     }
   }
 }

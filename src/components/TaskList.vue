@@ -12,7 +12,7 @@
       </transition-group>
     </draggable>
 
-    <br>
+    <hr>
 
     <div>
       <TodolistTask

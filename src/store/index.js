@@ -17,11 +17,12 @@ export default new Vuex.Store({
   },
   mutations: {
     addNewTask(state) {
-      state.taskList.push(state.newTask);
+      state.taskList.unshift(state.newTask);
       state.newTask = {
         text: '',
         messageId: 0,
         ticketId: 0,
+        groupId: 0,
         done: false,
         important: false,
         id: new Date().getTime(),
@@ -37,6 +38,7 @@ export default new Vuex.Store({
           text = '',
           messageId = 0,
           ticketId = 0,
+          groupId = 0,
           done = false,
           important = false,
           id = new Date().getTime(),
@@ -44,6 +46,7 @@ export default new Vuex.Store({
           text,
           messageId,
           ticketId,
+          groupId,
           done,
           important,
           id,

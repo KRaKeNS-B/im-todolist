@@ -27,10 +27,30 @@
 
     <i
       class="todolist__task-flag"
-      :class="{'todolist__task-flag_active': task.important}"
       @click="onFlagClick"
     >
-      &#127987;
+      <!-- eslint-disable max-len -->
+      <svg
+        class="todolist__task-flag-svg"
+        :class="{'todolist__task-flag-svg_active': task.important}"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 492.771 492.771"
+        style="enable-background:new 0 0 492.771 492.771;"
+        xml:space="preserve"
+      >
+        <path
+          d="M431.732,279.197l-67.804-76.611l67.804-76.603c3.867-4.371,4.813-10.611,2.406-15.937
+          c-2.39-5.325-7.684-8.75-13.537-8.75h-88.16V38.121c0-8.196-6.641-14.846-14.854-14.846H108.432C107.197,10.241,96.355,0,82.993,0
+          S58.786,10.241,57.551,23.275h-0.239v2.406v200.18v241.228c0,14.18,11.501,25.682,25.682,25.682
+          c14.179,0,25.681-11.502,25.681-25.682V225.861h102.628v63.177c0,8.196,6.642,14.846,14.854,14.846h194.462
+          c5.838,0,11.132-3.425,13.538-8.751C436.545,289.809,435.6,283.568,431.732,279.197z"
+        />
+      </svg>
+      <!-- eslint-enable max-len -->
     </i>
   </div>
 </template>
