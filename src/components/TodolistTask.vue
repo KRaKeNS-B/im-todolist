@@ -1,31 +1,26 @@
 <template>
-  <div class="todolist__task todolist__task-item">
+  <div class="todolist__task" :class="{'todolist__task_active': editing}">
+    <i :class="draggableClass" v-if="draggableClass">&#8286;&#8286;</i>
 
-    <div class="todolist__task-header">
+    <input type="checkbox" v-model="done">
 
-      <div style="flex-grow: 1">Public</div>
-      <div>{{task.ticketId}}</div>
-
-    </div>
-
-    <div class="todolist__task-content">
-      <input type="checkbox" v-model="done">
-
-      <input
-        :class="{
-          'todolist__task-text-done': this.done,
-          'todolist__task-text': !this.done,
-          'todolist__task-text-editing': !this.editing,
-        }"
-        type="text"
-        v-model="text"
-        class="todolist__task-input"
-        placeholder="Напишите комментарий"
-        ref="input"
-        @click="onClick"
-        @blur="onBlur"/>
-
-    </div>
+    <span
+      class="todolist__task-text"
+      :class="{'todolist__task_done': done}"
+      @click="onTaskTextClick"
+      v-if="!editing"
+    >
+      {{text}}
+    </span>
+    <input
+      v-else
+      :class="{'todolist__task_done': done}"
+      type="text"
+      v-model="text"
+      class="todolist__task-input"
+      ref="input"
+      @blur="onBlur"
+    />
   </div>
 </template>
 
@@ -40,12 +35,12 @@ export default {
       editing: false,
     };
   },
-  mounted() {
-    this.text = this.task.text;
-    this.done = this.task.done;
+  props: {
+    task: Object,
+    draggableClass: String,
   },
   watch: {
-    async done(val) {
+    done(val) {
       if (val) {
         this.startHide();
       } else {
@@ -56,7 +51,7 @@ export default {
     },
   },
   methods: {
-    onBlur(e) {
+    onBlur() {
       this.editing = false;
       this.task.text = this.text;
       this.$store.dispatch('saveTasksToLocalStorage');
@@ -69,41 +64,16 @@ export default {
       this.task.done = true;
       this.$store.dispatch('saveTasksToLocalStorage');
     },
-    onClick() {
+    onTaskTextClick() {
       this.editing = true;
-      this.$refs.input.focus();
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
     },
   },
-  props: {
-    task: Object,
+  mounted() {
+    this.text = this.task.text;
+    this.done = this.task.done;
   },
 };
 </script>
-
-<style>
-  .todolist__task-text{
-
-  }
-  .todolist__task-text-editing{
-    user-select: none;
-  }
-  .todolist__task-text-done{
-    text-decoration: line-through;
-  }
-  .todolist__task-item{
-    flex-direction: column;
-    align-items: start !important;
-    cursor: grab;
-  }
-  .todolist__task-header{
-    display: flex;
-    flex-direction: row;
-    margin-top: 5px;
-    width: 100%;
-  }
-  .todolist__task-content{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-</style>

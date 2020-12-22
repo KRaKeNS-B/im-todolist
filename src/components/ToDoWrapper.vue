@@ -27,12 +27,11 @@ export default {
     closeTodolist() {
       this.isOpen = false;
     },
-    handleRequest(request) {
+    handleBackgroundRequest(request) {
       switch (request.type) {
         case 'getTaskList':
         case 'taskListSaved':
-          // eslint-disable-next-line eqeqeq
-          if (request.taskList != false) {
+          if (request.taskList) {
             this.$store.commit('updateTaskList', request.taskList);
           }
           break;
@@ -44,7 +43,7 @@ export default {
   mounted() {
     this.$store.dispatch('getTaskList');
 
-    chrome.runtime.onMessage.addListener(this.handleRequest);
+    chrome.runtime.onMessage.addListener(this.handleBackgroundRequest);
     EventBus.$on('OPEN_TODOLIST', this.openTodolist);
   },
   beforeDestroy() {
@@ -120,6 +119,32 @@ export default {
     min-width: 0;
     text-overflow: ellipsis;
     outline: 0;
+    line-height: 20px;
+  }
+
+  &-text {
+    cursor: default;
+  }
+
+  &_done {
+    text-decoration: line-through;
+  }
+
+  &-draggable {
+    display: none;
+    position: absolute;
+    left: 0;
+    width: 16px;
+    height: 48px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 48px;
+    font-style: normal;
+    cursor: grab;
+  }
+
+  &:hover &-draggable {
+    display: block;
   }
 }
 </style>
