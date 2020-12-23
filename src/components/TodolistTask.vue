@@ -71,6 +71,8 @@ export default {
     task: Object,
     draggableClass: String,
   },
+  computed: {
+  },
   watch: {
     done(val) {
       if (val) {
@@ -116,10 +118,17 @@ export default {
         this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
       });
     },
+    isLastNewTaskId() {
+      if (this.$store.state.lastNewTaskId === this.task.id) {
+        this.onTaskTextClick();
+      }
+    },
   },
   mounted() {
     this.text = this.task.text;
     this.done = this.task.done;
+
+    this.isLastNewTaskId();
   },
 };
 </script>

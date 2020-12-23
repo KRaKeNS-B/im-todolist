@@ -35,13 +35,62 @@ export default {
             this.$store.commit('updateTaskList', request.taskList);
           }
           break;
+        case 'getMessageData':
+          this.addNewTaskByMessage(request.text);
+          break;
         default:
           break;
       }
     },
+    addNewTaskByMessage(taskText) {
+      const messageData = this.getMessageData(taskText);
+      if (messageData) {
+        this.$store.dispatch('addNewTaskByMessage', messageData);
+        this.openTodolist();
+      }
+    },
+    getMessageData(taskText) {
+      const contextEvent = this.$store.state.lastContextmenuEvent;
+
+      if (!contextEvent) return false;
+
+      const paths = contextEvent.path.filter((el) => (/message-\d+|ticket-\d+/g.test(el.id)));
+
+      if (paths.length < 2) {
+        if (taskText) {
+          return { messageText: taskText };
+        }
+        return false;
+      }
+
+      const messageNode = (/message-\d+/g.test(paths[0].id)) ? paths[0] : paths[1];
+      const ticketNode = (/ticket-\d+/g.test(paths[0].id)) ? paths[0] : paths[1];
+      const groupNode = document.querySelector('.group-list__group.active');
+
+      const messageId = messageNode.id.match(/message-(\d+)/)[1];
+      const messageText = taskText || messageNode.querySelector('.message__text').innerText;
+      const ticketId = ticketNode.id.match(/ticket-(\d+)/)[1];
+      const groupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
+
+      const result = {
+        messageId,
+        messageText,
+        ticketId,
+        groupId,
+      };
+
+      console.log(result);
+
+      return result;
+    },
   },
   mounted() {
     this.$store.dispatch('getTaskList');
+
+    document.addEventListener('contextmenu', (e) => {
+      console.log(e);
+      this.$store.commit('setLastContextmenuEvent', e);
+    });
 
     chrome.runtime.onMessage.addListener(this.handleBackgroundRequest);
     EventBus.$on('OPEN_TODOLIST', this.openTodolist);

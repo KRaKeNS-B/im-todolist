@@ -16,5 +16,19 @@ function handleContentRequest(request, sender) {
     });
   }
 }
+chrome.contextMenus.create({
+  title: 'Добавить задачу %s',
+  contexts: ['selection', 'page'],
+  id: 'IM_TODOLIST_CLICK',
+});
+
+chrome.contextMenus.onClicked.addListener(({ menuItemId, selectionText }, tab) => {
+  if (menuItemId === 'IM_TODOLIST_CLICK') {
+    chrome.tabs.sendMessage(tab.id, {
+      type: 'getMessageData',
+      text: selectionText,
+    });
+  }
+});
 
 chrome.runtime.onMessage.addListener(handleContentRequest);
