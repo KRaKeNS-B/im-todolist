@@ -1,8 +1,15 @@
 <template>
   <div class="todolist__wrapper profile" v-if="isOpen">
     <ToDoHeader @click="closeTodolist" />
-    <NewTaskInput />
-    <TaskList />
+    <ToDoTabs>
+      <ToDoTab name="ToDo" :selected="true">
+        <NewTaskInput />
+        <TaskList />
+      </ToDoTab>
+      <ToDoTab name="Календарь">
+        <ToDoCalendar class="todolist__calendar"/>
+      </ToDoTab>
+    </ToDoTabs>
   </div>
 </template>
 
@@ -11,10 +18,20 @@ import ToDoHeader from '@/components/ToDoHeader';
 import EventBus from '@/components/eventBus';
 import NewTaskInput from '@/components/NewTaskInput';
 import TaskList from '@/components/TaskList';
+import ToDoTabs from '@/components/ToDoTabs';
+import ToDoTab from '@/components/ToDoTab';
+import ToDoCalendar from '@/components/ToDoCalendar';
 
 export default {
   name: 'ToDoWrapper',
-  components: { TaskList, NewTaskInput, ToDoHeader },
+  components: {
+    TaskList,
+    NewTaskInput,
+    ToDoHeader,
+    ToDoTabs,
+    ToDoTab,
+    ToDoCalendar,
+  },
   data() {
     return {
       isOpen: false,
@@ -112,127 +129,140 @@ export default {
 </script>
 
 <style lang="scss">
-.todolist__wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-
-.todolist__task {
-  padding: 0 16px;
-  overflow: hidden;
-  position: relative;
-  flex-shrink: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  min-height: 48px;
-  -webkit-box-shadow: 0 17px 0 -16px #edebe9;
-  box-shadow: 0 17px 0 -16px #edebe9;
-
-  &_active {
-    -webkit-box-shadow: 0 17px 0 -16px #3763d4;
-    box-shadow: 0 17px 0 -16px #3763d4;
-  }
-
-  &-add-btn {
-    position: relative;
-    width: 17px;
-    height: 17px;
-    cursor: pointer;
-
-    span {
-      position: absolute;
-      top: 7px;
-      left: 0;
-      width: 17px;
-      height: 1px;
-      background: #3763d4;
-
-      &:nth-child(1) {
-        -webkit-transform: rotate(90deg);
-        -moz-transform: rotate(90deg);
-        -ms-transform: rotate(90deg);
-        -o-transform: rotate(90deg);
-        transform: rotate(90deg);
-      }
-    }
-  }
-
-  &-input, &-text {
-    font-size: 16px;
-    font-family: Roboto,sans-serif;
-    padding: 10px 17px 10px 12px;
-    -webkit-font-smoothing: antialiased;
-    font-weight: 400;
-    box-shadow: none;
-    margin: 0;
-    box-sizing: border-box;
-    border-radius: 0;
-    border: none;
-    background: none transparent;
-    width: 100%;
-    min-width: 0;
-    text-overflow: ellipsis;
-    outline: 0;
-    line-height: 20px;
-    resize: none;
-  }
-
-  &-input_textarea{
+.todolist__ {
+  &wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
     overflow: hidden;
   }
 
-  &-text {
-    cursor: default;
-    word-wrap: break-word;
-    word-break: break-word;
-    white-space: pre-line;
+  &calendar{
+    width: calc(100% - 32px);
+    margin: 8px 16px;
   }
 
-  &_done {
-    text-decoration: line-through;
+  &tasks {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
-  &-draggable {
-    display: none;
-    position: absolute;
-    left: 0;
-    width: 16px;
-    height: 48px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 48px;
-    font-style: normal;
-    cursor: grab;
-  }
+  &task {
+    padding: 0 16px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 48px;
+    -webkit-box-shadow: 0 17px 0 -16px #EDEBE9;
+    box-shadow: 0 17px 0 -16px #EDEBE9;
 
-  &:hover &-draggable {
-    display: block;
-  }
+    &_active {
+      -webkit-box-shadow: 0 17px 0 -16px #3763D4;
+      box-shadow: 0 17px 0 -16px #3763D4;
+    }
 
-  &-flag {
-    position: absolute;
-    right: 10px;
-    height: 48px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 48px;
-    font-style: normal;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
+    &-add-btn {
+      position: relative;
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
 
-    &-svg {
+      span {
+        position: absolute;
+        top: 7px;
+        left: 0;
+        width: 17px;
+        height: 1px;
+        background: #3763D4;
+
+        &:nth-child(1) {
+          -webkit-transform: rotate(90deg);
+          -moz-transform: rotate(90deg);
+          -ms-transform: rotate(90deg);
+          -o-transform: rotate(90deg);
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    &-input, &-text {
+      font-size: 16px;
+      font-family: Roboto, sans-serif;
+      padding: 10px 17px 10px 12px;
+      -webkit-font-smoothing: antialiased;
+      font-weight: 400;
+      box-shadow: none;
+      margin: 0;
+      box-sizing: border-box;
+      border-radius: 0;
+      border: none;
+      background: none transparent;
+      width: 100%;
+      min-width: 0;
+      text-overflow: ellipsis;
+      outline: 0;
+      line-height: 20px;
+      resize: none;
+    }
+
+    &-input_textarea {
+      overflow: hidden;
+    }
+
+    &-text {
+      cursor: default;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-line;
+    }
+
+    &_done {
+      text-decoration: line-through;
+    }
+
+    &-draggable {
+      display: none;
+      position: absolute;
+      left: 0;
       width: 16px;
-      height: 16px;
-      fill: #B0BEC5;
+      height: 48px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 48px;
+      font-style: normal;
+      cursor: grab;
+    }
 
-      &_active {
-        fill: #587bd4;
+    &:hover &-draggable {
+      display: block;
+    }
+
+    &-flag {
+      position: absolute;
+      right: 10px;
+      height: 48px;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 48px;
+      font-style: normal;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+
+      &-svg {
+        width: 16px;
+        height: 16px;
+        fill: #B0BEC5;
+
+        &_active {
+          fill: #587BD4;
+        }
       }
     }
   }

@@ -2,6 +2,7 @@ import Vue from 'vue';
 import store from '@/store';
 import ToDoBtn from '@/components/ToDoBtn';
 import ToDoWrapper from '@/components/ToDoWrapper';
+import VCalendar from 'v-calendar';
 
 function mountNavBtn() {
   const navbar = document.querySelector('.navbar__buttons');
@@ -14,6 +15,7 @@ function mountNavBtn() {
 
 mountNavBtn();
 
+Vue.use(VCalendar);
 new Vue({
   render: (h) => h(ToDoBtn),
 }).$mount('#todolist-open-btn');

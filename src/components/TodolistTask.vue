@@ -76,7 +76,7 @@ export default {
   watch: {
     done(val) {
       if (val) {
-        this.startHide();
+        this.startFinishingTask();
       } else {
         if (this.hideTimeout) clearTimeout(this.hideTimeout);
         this.task.done = false;
@@ -93,11 +93,11 @@ export default {
       this.task.text = this.text;
       this.$store.dispatch('saveTasksToLocalStorage');
     },
-    startHide() {
+    startFinishingTask() {
       if (this.hideTimeout) clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(this.hide, 1000);
+      this.hideTimeout = setTimeout(this.finishTask, 1000);
     },
-    hide() {
+    finishTask() {
       this.task.done = true;
       this.$store.dispatch('saveTasksToLocalStorage');
     },
@@ -127,7 +127,6 @@ export default {
   mounted() {
     this.text = this.task.text;
     this.done = this.task.done;
-
     this.isLastNewTaskId();
   },
 };
