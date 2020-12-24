@@ -12,9 +12,13 @@
       </transition-group>
     </draggable>
 
-    <hr>
+    <div class="completed_block" @click="onCompletedOpenClick">
+      <span v-if="!completedOpened"><b>&#62;</b></span>
+      <span v-if="completedOpened"><b>&#8744;</b></span>
+      Завершенные задачи
+    </div>
 
-    <div>
+    <div v-if="completedOpened">
       <TodolistTask
         v-for="task in tasksDone"
         :key="task.id"
@@ -37,6 +41,7 @@ export default {
   data() {
     return {
       draggableClass: 'todolist__task-draggable',
+      completedOpened: false,
     };
   },
   computed: {
@@ -60,6 +65,23 @@ export default {
         oldIndex: oldTotalIndex,
       });
     },
+    onCompletedOpenClick() {
+      this.completedOpened = !this.completedOpened;
+    },
   },
 };
 </script>
+
+<style scoped>
+  .completed_block{
+    color: #3763d4;
+    padding: 20px;
+    user-select: none;
+    cursor: pointer;
+  }
+  .completed_block span{
+    margin-right: 10px;
+    font-size: 1.2em;
+    vertical-align: middle;
+  }
+</style>
