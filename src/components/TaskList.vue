@@ -12,13 +12,17 @@
       </transition-group>
     </draggable>
 
-    <div class="completed_block" @click="onCompletedOpenClick">
-      <span v-if="!completedOpened"><b>&#62;</b></span>
-      <span v-if="completedOpened"><b>&#8744;</b></span>
+    <div class="todolist__show-done-tasks-btn" @click="onDoneTasksOpenClick">
+      <span
+        class="todolist__show-done-tasks-arrow"
+        :class="{ 'todolist__show-done-tasks-arrow_active': isDoneTasksOpened}"
+      >
+        &#10095;
+      </span>
       Завершенные задачи
     </div>
 
-    <div v-if="completedOpened">
+    <div v-if="isDoneTasksOpened">
       <TodolistTask
         v-for="task in tasksDone"
         :key="task.id"
@@ -41,7 +45,7 @@ export default {
   data() {
     return {
       draggableClass: 'todolist__task-draggable',
-      completedOpened: false,
+      isDoneTasksOpened: false,
     };
   },
   computed: {
@@ -65,23 +69,31 @@ export default {
         oldIndex: oldTotalIndex,
       });
     },
-    onCompletedOpenClick() {
-      this.completedOpened = !this.completedOpened;
+    onDoneTasksOpenClick() {
+      this.isDoneTasksOpened = !this.isDoneTasksOpened;
     },
   },
 };
 </script>
 
-<style scoped>
-  .completed_block{
-    color: #3763d4;
-    padding: 20px;
+<style lang="scss" scoped>
+.todolist__show-done-tasks {
+  &-btn {
+    color: #3763D4;
+    padding: 10px 20px;
     user-select: none;
     cursor: pointer;
   }
-  .completed_block span{
+
+  &-arrow {
     margin-right: 10px;
     font-size: 1.2em;
     vertical-align: middle;
+
+    &_active {
+      transform: rotate(90deg);
+      display: inline-block;
+    }
   }
+}
 </style>
