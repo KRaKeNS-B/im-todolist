@@ -7,6 +7,7 @@ const mutations = {
       ticketId: 0,
       groupId: 0,
       done: false,
+      doneTime: -1,
       important: false,
       id: new Date().getTime(),
     };
@@ -23,6 +24,7 @@ const mutations = {
         ticketId = 0,
         groupId = 0,
         done = false,
+        doneTime = -1,
         important = false,
         id = new Date().getTime(),
       }) => ({
@@ -31,6 +33,7 @@ const mutations = {
         ticketId,
         groupId,
         done,
+        doneTime,
         important,
         id,
       }));

@@ -8,6 +8,13 @@
       </ToDoTab>
       <ToDoTab name="Календарь">
         <ToDoCalendar class="todolist__calendar"/>
+        <div style="overflow: auto">
+        <TodolistTask
+          v-for="task in tasksDone"
+          :key="task.id"
+          :task="task"
+        />
+        </div>
       </ToDoTab>
     </ToDoTabs>
   </div>
@@ -21,6 +28,7 @@ import TaskList from '@/components/TaskList';
 import ToDoTabs from '@/components/ToDoTabs';
 import ToDoTab from '@/components/ToDoTab';
 import ToDoCalendar from '@/components/ToDoCalendar';
+import TodolistTask from '@/components/TodolistTask';
 
 export default {
   name: 'ToDoWrapper',
@@ -31,6 +39,7 @@ export default {
     ToDoTabs,
     ToDoTab,
     ToDoCalendar,
+    TodolistTask,
   },
   data() {
     return {
@@ -124,6 +133,11 @@ export default {
     document.removeEventListener('contextmenu', this.onContextMenuEvent);
     window.removeEventListener('click', this.onBlurTodoList);
     EventBus.$off('OPEN_TODOLIST', this.openTodolist);
+  },
+  computed: {
+    tasksDone() {
+      return this.$store.state.taskList.filter((t) => t.done && t.doneTime > 0);
+    },
   },
 };
 </script>

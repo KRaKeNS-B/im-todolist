@@ -14,6 +14,7 @@ export default new Vuex.Store({
       ticketId: 0,
       groupId: 0,
       done: false,
+      doneTime: -1,
       important: false,
       id: new Date().getTime(), // Потом сделать autoincrement с сохранением его значения
     },

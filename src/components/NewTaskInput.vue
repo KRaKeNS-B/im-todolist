@@ -39,6 +39,7 @@ export default {
   },
   methods: {
     addNewTask() {
+      if (!this.newTaskText.length) return;
       this.$store.dispatch('addNewTask');
     },
   },
