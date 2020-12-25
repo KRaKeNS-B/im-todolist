@@ -43,8 +43,8 @@ export default {
       return this.date.getDate() === this.getDate(timestamp).getDate();
     },
     getDotClass(index) {
-      if (index === 3) return 'dot-last';
-      return index > 3 ? 'dot-invisible' : '';
+      if (index === 0) return 'dot-last';
+      return 'dot-invisible';
     },
   },
   computed: {
