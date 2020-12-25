@@ -8,13 +8,6 @@
       </ToDoTab>
       <ToDoTab name="Календарь">
         <ToDoCalendar class="todolist__calendar"/>
-        <div style="overflow: auto">
-        <TodolistTask
-          v-for="task in tasksDone"
-          :key="task.id"
-          :task="task"
-        />
-        </div>
       </ToDoTab>
     </ToDoTabs>
   </div>
@@ -28,7 +21,6 @@ import TaskList from '@/components/TaskList';
 import ToDoTabs from '@/components/ToDoTabs';
 import ToDoTab from '@/components/ToDoTab';
 import ToDoCalendar from '@/components/ToDoCalendar';
-import TodolistTask from '@/components/TodolistTask';
 
 export default {
   name: 'ToDoWrapper',
@@ -39,7 +31,6 @@ export default {
     ToDoTabs,
     ToDoTab,
     ToDoCalendar,
-    TodolistTask,
   },
   data() {
     return {
@@ -49,13 +40,13 @@ export default {
   methods: {
     openTodolist() {
       this.isOpen = true;
-      this.$nextTick(() => {
+      /* this.$nextTick(() => {
         window.addEventListener('click', this.onBlurTodoList);
-      });
+      }); */
     },
     closeTodolist() {
       this.isOpen = false;
-      window.removeEventListener('click', this.onBlurTodoList);
+      // window.removeEventListener('click', this.onBlurTodoList);
     },
     handleBackgroundRequest(request) {
       switch (request.type) {
@@ -134,11 +125,6 @@ export default {
     window.removeEventListener('click', this.onBlurTodoList);
     EventBus.$off('OPEN_TODOLIST', this.openTodolist);
   },
-  computed: {
-    tasksDone() {
-      return this.$store.state.taskList.filter((t) => t.done && t.doneTime > 0);
-    },
-  },
 };
 </script>
 
@@ -153,7 +139,11 @@ export default {
 
   &calendar{
     width: calc(100% - 32px);
-    margin: 8px 16px;
+    margin: 8px 16px 0 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   &tasks {

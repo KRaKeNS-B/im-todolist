@@ -48,6 +48,7 @@ export default {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      height: 100%;
     }
     .tabs li {
         display: block;
@@ -95,5 +96,6 @@ export default {
 
     .tabs-details {
       overflow: hidden;
+      height: 100%;
     }
 </style>

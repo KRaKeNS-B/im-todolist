@@ -1,15 +1,36 @@
 <template>
   <div>
-    <Calendar class="calendar" :attributes="this.attributes">
+    <DatePicker class="calendar" v-model="date" :attributes="this.attributes"/>
+
+    <div class="calendar-task-container">
+      <TodolistTask
+        v-for="task in tasksDoneInCurrentDate"
+        :key="task.id"
+        :task="task"
+      />
+    </div>
   </div>
 </template>
 
 <script>
-import Calendar from 'v-calendar/lib/components/calendar.umd';
+// import Calendar from 'v-calendar/lib/components/calendar.umd';
+import DatePicker from 'v-calendar/lib/components/date-picker.umd';
+import TodolistTask from '@/components/TodolistTask';
 
 export default {
   components: {
-    Calendar,
+    DatePicker,
+    TodolistTask,
+  },
+  data() {
+    return {
+      date: new Date(),
+    };
+  },
+  watch: {
+    date(val) {
+      console.log(val);
+    },
   },
   methods: {
     getDate(timestamp) {
@@ -17,10 +38,22 @@ export default {
       date.setTime(timestamp);
       return date;
     },
+    isCurrentDate(timestamp) {
+      if (!this.date) return false;
+      return this.date.getDate() === this.getDate(timestamp).getDate();
+    },
+    getDotClass(index) {
+      if (index === 3) return 'dot-last';
+      return index > 3 ? 'dot-invisible' : '';
+    },
   },
   computed: {
     tasksDone() {
       return this.$store.state.taskList.filter((t) => t.done);
+    },
+    tasksDoneInCurrentDate() {
+      return this.$store.state.taskList.filter((t) => t.done
+      && this.isCurrentDate(t.doneTime > 0 ? t.doneTime : t.id));
     },
     attributes() {
       const result = [];
@@ -29,7 +62,7 @@ export default {
           dates: this.getDate(task.doneTime > 0 ? task.doneTime : task.id),
           dot: {
             color: 'red',
-            class: index > 3 ? 'dot-invisible' : '',
+            class: this.getDotClass(index),
           },
           popover: {
             label: task.text.length > 30 ? `${task.text.substr(0, 30)}...` : task.text,
@@ -48,5 +81,12 @@ export default {
   }
   .dot-invisible{
     display: none;
+  }
+  .dot-last{
+    margin-right: 0px !important;
+  }
+  .calendar-task-container{
+    overflow: auto;
+    margin: 0 5px 0 0;
   }
 </style>
