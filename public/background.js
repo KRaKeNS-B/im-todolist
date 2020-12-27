@@ -16,10 +16,18 @@ function handleContentRequest(request, sender) {
     });
   }
 }
-chrome.contextMenus.create({
-  title: 'Добавить задачу %s',
-  contexts: ['selection', 'page'],
-  id: 'IM_TODOLIST_CLICK',
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    title: 'Добавить задачу %s',
+    contexts: ['selection', 'page'],
+    id: 'IM_TODOLIST_CLICK',
+    documentUrlPatterns: [
+      '*://localhost/*',
+      '*://web.involta.work/*',
+      '*://m-bobovikov.web-app.involta-messenger.dev-02.h.involta.ru/*',
+    ],
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(({ menuItemId, selectionText }, tab) => {

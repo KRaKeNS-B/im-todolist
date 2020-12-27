@@ -23,13 +23,9 @@ export default {
   methods: {
     openTodolist() {
       this.isOpen = true;
-      this.$nextTick(() => {
-        window.addEventListener('click', this.onBlurTodoList);
-      });
     },
     closeTodolist() {
       this.isOpen = false;
-      window.removeEventListener('click', this.onBlurTodoList);
     },
     handleBackgroundRequest(request) {
       switch (request.type) {
@@ -90,10 +86,6 @@ export default {
     onContextMenuEvent(e) {
       this.$store.commit('setLastContextmenuEvent', e);
     },
-    onBlurTodoList(e) {
-      const paths = e.path.filter((el) => (/todolist__wrapper|todolist__btn/g.test(el.className)));
-      if (paths.length === 0) this.closeTodolist();
-    },
   },
   mounted() {
     this.$store.dispatch('getTaskList');
@@ -105,7 +97,6 @@ export default {
   },
   beforeDestroy() {
     document.removeEventListener('contextmenu', this.onContextMenuEvent);
-    window.removeEventListener('click', this.onBlurTodoList);
     EventBus.$off('OPEN_TODOLIST', this.openTodolist);
   },
 };
