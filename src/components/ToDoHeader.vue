@@ -16,8 +16,9 @@ export default {
 
 <style lang="scss">
 .todolist__header {
-  padding: 20px;
-  background: #3763d4;
+  padding: 0 20px;
+  min-height: 46px;
+  background: #000000;
   color: #fff;
   display: -webkit-box;
   display: -ms-flexbox;

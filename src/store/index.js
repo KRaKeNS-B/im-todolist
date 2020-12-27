@@ -25,10 +25,3 @@ export default new Vuex.Store({
   modules: {
   },
 });
-
-// (response) => {
-//   if (response.taskList) {
-//     console.warn(response);
-//     commit('updateTaskList', response.taskList);
-//   }
-// })
