@@ -82,6 +82,7 @@ export default {
       hideTimeout: null,
       editing: false,
       inputStyle: '',
+      inited: false,
     };
   },
   props: {
@@ -95,6 +96,8 @@ export default {
   },
   watch: {
     done(val) {
+      if (!this.inited) return;
+
       if (val) {
         this.startFinishingTask();
       } else {
@@ -277,6 +280,7 @@ export default {
     this.text = this.task.text;
     this.done = this.task.done;
     this.isLastNewTaskId();
+    this.inited = true;
   },
 };
 </script>
