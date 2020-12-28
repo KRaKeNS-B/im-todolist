@@ -83,7 +83,7 @@ export default {
     display: none;
   }
   .dot-last{
-    margin-right: 0px !important;
+    margin: 0 0 22px 22px !important;
   }
   .calendar-task-container{
     overflow: auto;
