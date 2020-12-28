@@ -6,7 +6,7 @@ const mutations = {
 
     state.taskList.unshift(state.newTask);
 
-    state.newTask = constants.defaultTask;
+    state.newTask = { ...constants.defaultTask };
   },
   addTask(state, task) {
     if (task) {

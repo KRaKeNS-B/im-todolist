@@ -9,7 +9,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     taskList: [],
-    newTask: constants.defaultTask,
+    newTask: { ...constants.defaultTask },
     lastContextmenuEvent: null,
     lastNewTaskId: null,
   },
