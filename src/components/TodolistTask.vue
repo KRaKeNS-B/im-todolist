@@ -37,6 +37,7 @@
       class="todolist__task-input todolist__task-input_textarea"
       rows="1"
       ref="input"
+      placeholder="Текст задачи"
       @blur="onBlur"
       :style="inputStyle"
     ></textarea>
@@ -99,6 +100,7 @@ export default {
       } else {
         if (this.hideTimeout) clearTimeout(this.hideTimeout);
         this.task.done = false;
+        this.task.doneTime = -1;
         this.$store.dispatch('saveTasksToLocalStorage');
       }
     },
@@ -118,9 +120,11 @@ export default {
     },
     finishTask() {
       this.task.done = true;
+      this.task.doneTime = new Date().getTime();
       this.$store.dispatch('saveTasksToLocalStorage');
     },
     onTaskTextClick() {
+      if (this.done) return;
       this.editing = true;
       this.$nextTick(() => {
         this.resizeTextarea();
@@ -272,7 +276,6 @@ export default {
   mounted() {
     this.text = this.task.text;
     this.done = this.task.done;
-
     this.isLastNewTaskId();
   },
 };

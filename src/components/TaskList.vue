@@ -1,7 +1,8 @@
 <template>
   <div class="todolist__tasks">
 
-    <draggable v-model="tasks" @end="onDragEnd" :handle="`.${draggableClass}`">
+    <draggable v-model="tasks" v-bind="{'drag-class':'drag','ghost-class':'ghost'}"
+    @end="onDragEnd" :handle="`.${draggableClass}`">
       <transition-group>
         <TodolistTask
           v-for="task in tasks"
@@ -95,5 +96,12 @@ export default {
       display: inline-block;
     }
   }
+}
+.ghost{
+  background-color: #ededed !important;
+}
+.drag{
+  background-color: #ededed !important;
+  opacity: 0.25 !important;
 }
 </style>

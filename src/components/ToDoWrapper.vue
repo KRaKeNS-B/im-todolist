@@ -1,8 +1,15 @@
 <template>
   <div class="todolist__wrapper profile" v-if="isOpen">
     <ToDoHeader @click="closeTodolist" />
-    <NewTaskInput />
-    <TaskList />
+    <ToDoTabs>
+      <ToDoTab name="ToDo" :selected="true">
+        <NewTaskInput />
+        <TaskList />
+      </ToDoTab>
+      <ToDoTab name="Календарь">
+        <ToDoCalendar class="todolist__calendar"/>
+      </ToDoTab>
+    </ToDoTabs>
   </div>
 </template>
 
@@ -11,10 +18,20 @@ import ToDoHeader from '@/components/ToDoHeader';
 import EventBus from '@/components/eventBus';
 import NewTaskInput from '@/components/NewTaskInput';
 import TaskList from '@/components/TaskList';
+import ToDoTabs from '@/components/ToDoTabs';
+import ToDoTab from '@/components/ToDoTab';
+import ToDoCalendar from '@/components/ToDoCalendar';
 
 export default {
   name: 'ToDoWrapper',
-  components: { TaskList, NewTaskInput, ToDoHeader },
+  components: {
+    TaskList,
+    NewTaskInput,
+    ToDoHeader,
+    ToDoTabs,
+    ToDoTab,
+    ToDoCalendar,
+  },
   data() {
     return {
       isOpen: false,
@@ -113,6 +130,16 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+    overflow: hidden;
+  }
+
+  &calendar{
+    width: calc(100% - 32px);
+    margin: 8px 16px 0 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   &tasks {

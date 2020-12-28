@@ -36,6 +36,7 @@ const mutations = {
           name: null,
         },
         done = false,
+        doneTime = -1,
         important = false,
         id = new Date().getTime(),
       }) => ({
@@ -44,6 +45,7 @@ const mutations = {
         ticket: ticket.id ? ticket : { id: ticketId, publicId: null },
         group: group.id ? group : { id: groupId, name: null },
         done,
+        doneTime,
         important,
         id,
       }));

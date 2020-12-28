@@ -1,0 +1,34 @@
+<template>
+    <div v-show="isActive" class="tab-container">
+      <slot></slot>
+    </div>
+</template>
+
+<script>
+export default {
+  props: {
+    name: { required: true },
+    selected: { default: false },
+  },
+  data() {
+    return {
+      isActive: false,
+    };
+  },
+  computed: {
+    href() {
+      return '#ref';
+    },
+  },
+  mounted() {
+    this.isActive = this.selected;
+  },
+};
+</script>
+<style scoped>
+  .tab-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
