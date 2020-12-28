@@ -49,11 +49,13 @@ export default {
   },
   computed: {
     tasksDone() {
-      return this.$store.state.taskList.filter((t) => t.done);
+      return this.$store.state.taskList.filter((task) => task.done);
     },
     tasksDoneInCurrentDate() {
-      return this.$store.state.taskList.filter((t) => t.done
-      && this.isCurrentDate(t.doneTime > 0 ? t.doneTime : t.id));
+      return this.$store.state.taskList.filter((task) => (
+        task.done
+        && this.isCurrentDate(task.doneTime > 0 ? task.doneTime : task.id)
+      ));
     },
     attributes() {
       const result = [];
@@ -76,17 +78,17 @@ export default {
 </script>
 
 <style>
-  .calendar{
-    width: 100% !important;
-  }
-  .dot-invisible{
-    display: none;
-  }
-  .dot-last{
-    margin-right: 0px !important;
-  }
-  .calendar-task-container{
-    overflow: auto;
-    margin: 0 5px 0 0;
-  }
+.calendar{
+  width: 100% !important;
+}
+.dot-invisible{
+  display: none;
+}
+.dot-last{
+  margin-right: 0px !important;
+}
+.calendar-task-container{
+  overflow: auto;
+  margin: 0 5px 0 0;
+}
 </style>

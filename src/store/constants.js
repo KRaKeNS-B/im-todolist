@@ -13,6 +13,7 @@ const constants = {
       name: null,
     },
     done: false,
+    doneTime: -1,
     important: false,
     id: null,
   },
