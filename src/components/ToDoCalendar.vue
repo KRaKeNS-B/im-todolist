@@ -78,17 +78,17 @@ export default {
 </script>
 
 <style>
-.calendar{
-  width: 100% !important;
-}
-.dot-invisible{
-  display: none;
-}
-.dot-last{
-  margin-right: 0px !important;
-}
-.calendar-task-container{
-  overflow: auto;
-  margin: 0 5px 0 0;
-}
+  .calendar{
+    width: 100% !important;
+  }
+  .dot-invisible{
+    display: none;
+  }
+  .dot-last{
+    margin: 0 0 22px 22px !important;
+  }
+  .calendar-task-container{
+    overflow: auto;
+    margin: 0 5px 0 0;
+  }
 </style>
