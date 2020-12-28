@@ -1,5 +1,21 @@
 <template>
-  <div class="todolist__task" :class="{'todolist__task_active': editing}">
+  <div
+    class="todolist__task"
+    :class="{
+      'todolist__task_active': editing,
+      'todolist__task-ticket-link_active': isTaskHasLinkToTicket,
+    }"
+    @contextmenu.prevent="onTaskContextmenu"
+  >
+    <div class="todolist__task-ticket-link" v-if="isTaskHasLinkToTicket">
+      <div class="todolist__task-ticket-link-group">
+        {{task.group.name || 'Устарел'}}
+      </div>
+      <div class="todolist__task-ticket-link-ticket">
+        {{task.ticket.publicId || 'Устарел'}}
+      </div>
+    </div>
+
     <i :class="draggableClass" v-if="draggableClass">&#8286;&#8286;</i>
 
     <input type="checkbox" v-model="done">
@@ -72,6 +88,9 @@ export default {
     draggableClass: String,
   },
   computed: {
+    isTaskHasLinkToTicket() {
+      return !!this.task.group.id;
+    },
   },
   watch: {
     done(val) {
@@ -116,12 +135,138 @@ export default {
       this.inputStyle = this.$refs.input ? 'height:auto;' : '';
       this.$nextTick(() => {
         this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
+        this.$nextTick(() => {
+          this.inputStyle = this.$refs.input ? `height: ${this.$refs.input.scrollHeight}px;` : '';
+        });
       });
     },
     isLastNewTaskId() {
       if (this.$store.state.lastNewTaskId === this.task.id) {
         this.onTaskTextClick();
       }
+    },
+    async onTaskContextmenu() {
+      if (await this.goToTicketGroup(this.task.group.id)) {
+        if (await this.goToTicket(this.getTicketNode(this.task.ticket.id))) {
+          return;
+        }
+
+        this.findTicket(this.task.ticket.publicId);
+
+        await this.goToTicket(await this.waitTicket(this.task.ticket.id));
+      }
+    },
+    async goToTicket(ticketNode) {
+      if (ticketNode) {
+        ticketNode.scrollIntoView();
+        const isMessageFound = await this.goToMessage(ticketNode);
+        return isMessageFound;
+      }
+      return false;
+    },
+    async goToMessage(ticketNode) {
+      if (!this.scrollToMessage(this.task.message.id)) {
+        const messageListNode = ticketNode.querySelector('.messages-list');
+        if (messageListNode) {
+          messageListNode.scrollTop = 0;
+        }
+
+        return new Promise((resolve) => {
+          setTimeout(async () => { resolve(await this.goToMessage(ticketNode)); }, 200);
+        });
+      }
+
+      return true;
+    },
+    getTicketGroupNode(groupId) {
+      return document.querySelector(`#group-list__group_id_${groupId}`);
+    },
+    getTicketNode(ticketId) {
+      return document.querySelector(`#ticket-${ticketId}`);
+    },
+    getMessageNode(messageId) {
+      return document.querySelector(`#message-${messageId}`);
+    },
+    findTicket(ticketId) {
+      if (!ticketId) return;
+
+      const searchInput = document.querySelector('#search-bar__input');
+
+      if (searchInput) {
+        searchInput.value = `${ticketId}`;
+
+        if ('createEvent' in document) {
+          const evt = document.createEvent('HTMLEvents');
+          evt.initEvent('input', false, true);
+          searchInput.dispatchEvent(evt);
+        } else {
+          searchInput.fireEvent('oninput');
+        }
+
+        const searchBtn = document.querySelector('.search-bar__search-icon_search');
+
+        if (searchBtn) {
+          searchBtn.click();
+        }
+      }
+    },
+    scrollToMessage(messageId) {
+      const targetMessageNode = this.getMessageNode(messageId);
+
+      if (targetMessageNode) {
+        targetMessageNode.scrollIntoView();
+        return true;
+      }
+      return false;
+    },
+    async goToTicketGroup(groupId) {
+      const targetGroupNode = this.getTicketGroupNode(groupId);
+
+      if (targetGroupNode) {
+        if (targetGroupNode.classList.contains('active')) {
+          return true;
+        }
+
+        targetGroupNode.click();
+        await this.timeout();
+
+        return true;
+      }
+
+      return false;
+    },
+    timeout(ms = 500) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    },
+    async waitTicket(ticketId) {
+      const target = document.querySelector('.tickets-list__scroll-area');
+
+      const rejectTime = 5000;
+
+      return new Promise((resolve) => {
+        const observerConfig = {
+          childList: true,
+          subtree: true,
+        };
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+              const ticketNode = this.getTicketNode(ticketId);
+
+              if (ticketNode) {
+                observer.disconnect();
+                resolve(ticketNode);
+              }
+            }
+          });
+        });
+
+        window.setTimeout(() => {
+          resolve(false);
+        }, rejectTime);
+
+        observer.observe(target, observerConfig);
+      });
     },
   },
   mounted() {

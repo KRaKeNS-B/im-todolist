@@ -1,15 +1,17 @@
+import constants from '@/store/constants';
+
 const mutations = {
   addNewTask(state) {
+    state.newTask.id = new Date().getTime();
+
     state.taskList.unshift(state.newTask);
-    state.newTask = {
-      text: '',
-      messageId: 0,
-      ticketId: 0,
-      groupId: 0,
-      done: false,
-      important: false,
-      id: new Date().getTime(),
-    };
+
+    state.newTask = constants.defaultTask;
+  },
+  addTask(state, task) {
+    if (task) {
+      state.taskList.unshift(task);
+    }
   },
   updateNewTaskText(state, text) {
     state.newTask.text = text;
@@ -19,17 +21,28 @@ const mutations = {
       .filter((task) => (task || false))
       .map(({
         text = '',
-        messageId = 0,
-        ticketId = 0,
-        groupId = 0,
+        messageId = null,
+        message = {
+          id: null,
+        },
+        ticketId = null,
+        ticket = {
+          id: null,
+          publicId: null,
+        },
+        groupId = null,
+        group = {
+          id: null,
+          name: null,
+        },
         done = false,
         important = false,
         id = new Date().getTime(),
       }) => ({
         text,
-        messageId,
-        ticketId,
-        groupId,
+        message: message.id ? message : { id: messageId },
+        ticket: ticket.id ? ticket : { id: ticketId, publicId: null },
+        group: group.id ? group : { id: groupId, name: null },
         done,
         important,
         id,

@@ -9,20 +9,31 @@ const actions = {
       taskList: state.taskList,
     });
   },
-  addNewTaskByMessage({ state, dispatch, commit }, {
-    messageId, messageText, ticketId, groupId,
+  addNewTaskByMessage({ dispatch, commit }, {
+    message = { id: null },
+    messageText,
+    ticket = {
+      id: null,
+      publicId: null,
+    },
+    group = {
+      id: null,
+      name: null,
+    },
   }) {
     const taskId = new Date().getTime();
 
-    state.taskList.unshift({
+    const task = {
       text: messageText,
-      messageId,
-      ticketId,
-      groupId,
+      message,
+      ticket,
+      group,
       done: false,
       important: false,
       id: taskId,
-    });
+    };
+
+    commit('addTask', task);
 
     commit('setLastTaskId', taskId);
 

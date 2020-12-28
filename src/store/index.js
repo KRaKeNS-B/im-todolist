@@ -2,21 +2,14 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import actions from '@/store/actions';
 import mutations from '@/store/mutations';
+import constants from '@/store/constants';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     taskList: [],
-    newTask: {
-      text: '',
-      messageId: 0,
-      ticketId: 0,
-      groupId: 0,
-      done: false,
-      important: false,
-      id: new Date().getTime(), // Потом сделать autoincrement с сохранением его значения
-    },
+    newTask: constants.defaultTask,
     lastContextmenuEvent: null,
     lastNewTaskId: null,
   },

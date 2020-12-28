@@ -67,16 +67,21 @@ export default {
       const ticketNode = (/ticket-\d+/g.test(paths[0].id)) ? paths[0] : paths[1];
       const groupNode = document.querySelector('.group-list__group.active');
 
-      const messageId = messageNode.id.match(/message-(\d+)/)[1];
       const messageText = taskText || messageNode.querySelector('.message__text').innerText;
-      const ticketId = ticketNode.id.match(/ticket-(\d+)/)[1];
-      const groupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
 
       const result = {
-        messageId,
+        message: {
+          id: messageNode.id.match(/message-(\d+)/)[1],
+        },
         messageText,
-        ticketId,
-        groupId,
+        ticket: {
+          id: ticketNode.id.match(/ticket-(\d+)/)[1],
+          publicId: ticketNode.querySelector('.ticket__id-title').innerText,
+        },
+        group: {
+          id: groupNode.id.match(/group-list__group_id_(\d+)/)[1],
+          name: groupNode.querySelector('.group-list__group__name').innerText,
+        },
       };
 
       console.log(result);
@@ -231,6 +236,21 @@ export default {
         &_active {
           fill: #587BD4;
         }
+      }
+    }
+
+    &-ticket-link {
+      position: absolute;
+      top: 0;
+      display: flex;
+      font-size: 0.8em;
+
+      &_active {
+        padding-top: 10px;
+      }
+
+      &-group {
+        margin-right: 10px;
       }
     }
   }
