@@ -271,6 +271,12 @@ export default {
       top: 0;
       display: flex;
       font-size: 0.8em;
+      background-color: #9E9E9E;
+      padding: 0 5px;
+      line-height: 1em;
+      border-radius: 0 0 4px 4px;
+      color: #fff;
+      cursor: pointer;
 
       &_active {
         padding-top: 10px;

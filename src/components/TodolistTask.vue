@@ -5,9 +5,13 @@
       'todolist__task_active': editing,
       'todolist__task-ticket-link_active': isTaskHasLinkToTicket,
     }"
-    @contextmenu.prevent="onTaskContextmenu"
+    @contextmenu.prevent="openParentTask"
   >
-    <div class="todolist__task-ticket-link" v-if="isTaskHasLinkToTicket">
+    <div
+      class="todolist__task-ticket-link"
+      v-if="isTaskHasLinkToTicket"
+      @click="openParentTask"
+    >
       <div class="todolist__task-ticket-link-group">
         {{task.group.name || 'Устарел'}}
       </div>
@@ -152,8 +156,11 @@ export default {
         this.onTaskTextClick();
       }
     },
-    async onTaskContextmenu() {
+    async openParentTask() {
       if (await this.goToTicketGroup(this.task.group.id)) {
+        this.closeSearch();
+        await this.timeout(200);
+
         if (await this.goToTicket(this.getTicketNode(this.task.ticket.id))) {
           return;
         }
@@ -163,9 +170,15 @@ export default {
         await this.goToTicket(await this.waitTicket(this.task.ticket.id));
       }
     },
+    closeSearch() {
+      const closeBtn = document.querySelector('.search-bar__search-icon_close');
+      if (closeBtn) {
+        closeBtn.click();
+      }
+    },
     async goToTicket(ticketNode) {
       if (ticketNode) {
-        ticketNode.scrollIntoView();
+        ticketNode.scrollIntoView({ block: 'start', inline: 'start' });
         const isMessageFound = await this.goToMessage(ticketNode);
         return isMessageFound;
       }
