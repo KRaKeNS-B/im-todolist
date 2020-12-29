@@ -303,6 +303,7 @@ export default {
     },
   },
   mounted() {
+    this.inited = false;
     this.text = this.task.text;
     this.done = this.task.done;
     this.isLastNewTaskId();

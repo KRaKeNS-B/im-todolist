@@ -27,11 +27,6 @@ export default {
       date: new Date(),
     };
   },
-  watch: {
-    date(val) {
-      console.log(val);
-    },
-  },
   methods: {
     getDate(timestamp) {
       const date = new Date();

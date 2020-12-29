@@ -3,7 +3,7 @@
         <div class="tabs">
         <ul>
             <li v-for="tab in tabs" :key="tab.name" :class="{ 'is-active': tab.isActive }">
-                <a :href="tab.href" @click="selectTab(tab)">{{ tab.name }}</a>
+                <div class="tab-title" @click="selectTab(tab)">{{ tab.name }}</div>
             </li>
         </ul>
         </div>
@@ -53,15 +53,15 @@ export default {
     .tabs li {
         display: block;
     }
-    .tabs li.is-active a {
+    .tabs li.is-active .tab-title {
         border-bottom-color: #3763d4;
         color: #3763d4;
     }
-    .tabs a:hover{
+    .tabs .tab-title:hover{
       border-bottom-color: #363636;
       color: #363636;
     }
-    .tabs a {
+    .tabs .tab-title {
       -webkit-box-align: center;
       align-items: center;
       border-bottom: 1px solid #dbdbdb;
@@ -85,12 +85,12 @@ export default {
       padding: 0px;
       margin: 5px 16px 10px 16px;
     }
-    a {
+    .tab-title {
         cursor: pointer;
         text-decoration: none;
         transition: none 86ms ease-out;
     }
-    a:hover {
+    .tab-title:hover {
       color: #363636;
     }
 
