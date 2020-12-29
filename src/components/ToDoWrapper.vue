@@ -35,6 +35,7 @@ export default {
   data() {
     return {
       isOpen: false,
+      ticketListObserver: null,
     };
   },
   methods: {
@@ -108,6 +109,64 @@ export default {
     onContextMenuEvent(e) {
       this.$store.commit('setLastContextmenuEvent', e);
     },
+    observeTicketList() {
+      const target = document.querySelector('.tickets-list__scroll-area');
+
+      const observerConfig = {
+        childList: true,
+        subtree: true,
+      };
+
+      this.ticketListObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList') {
+            this.addBookmarkIconToTickets();
+          }
+        });
+      });
+
+      this.ticketListObserver.observe(target, observerConfig);
+    },
+    addBookmarkIconToTickets() {
+      const tasksInCurrentGroup = this.getTasksInCurrentGroup()
+        .map((task) => `ticket-${task.ticket.id}`);
+
+      const openedTickets = [...document.querySelectorAll('.ticket')];
+
+      openedTickets.filter((el) => tasksInCurrentGroup.includes(el.id))
+        .forEach(this.addBookmarkIconToTicket);
+    },
+    getTasksInCurrentGroup() {
+      const groupNode = document.querySelector('.group-list__group.active');
+      const currentGroupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
+
+      const tasksInGroup = this.$store.state.taskList
+        .filter((task) => task.group.id === currentGroupId && task.done === false);
+
+      return tasksInGroup;
+    },
+    addBookmarkIconToTicket(ticketNode) {
+      const iconWrapper = ticketNode.querySelector('.ticket__action-icons');
+
+      if (iconWrapper) {
+        const bookmarkIcon = iconWrapper.querySelector('.todolist__bookmark-icon');
+
+        if (!bookmarkIcon) {
+          iconWrapper.prepend(this.createBookmarkIconNode());
+        }
+      }
+    },
+    createBookmarkIconNode() {
+      const iconWrapper = document.createElement('span');
+      iconWrapper.className = 'ticket__action-icons__icon ticket__users-icon-block';
+
+      const iconNode = document.createElement('span');
+      iconNode.className = 'todolist__bookmark-icon';
+
+      iconWrapper.append(iconNode);
+
+      return iconWrapper;
+    },
   },
   mounted() {
     this.$store.dispatch('getTaskList');
@@ -116,10 +175,14 @@ export default {
 
     chrome.runtime.onMessage.addListener(this.handleBackgroundRequest);
     EventBus.$on('OPEN_TODOLIST', this.openTodolist);
+
+    this.observeTicketList();
   },
   beforeDestroy() {
     document.removeEventListener('contextmenu', this.onContextMenuEvent);
     EventBus.$off('OPEN_TODOLIST', this.openTodolist);
+
+    if (this.ticketListObserver) this.ticketListObserver.disconnect();
   },
 };
 </script>
@@ -131,6 +194,29 @@ export default {
     top: 0;
     right: 0;
     overflow: hidden;
+  }
+
+  &bookmark-icon {
+    position: relative;
+    width: 12px;
+    height: 15px;
+
+    &:after,
+    &:before {
+      content: '';
+      position: absolute;
+      width: 0px;
+      height: 0px;
+      border-bottom: 15px solid transparent;
+    }
+
+    &:after {
+      border-right: 12px solid #febe10;
+    }
+
+    &:before {
+      border-left: 12px solid #febe10;
+    }
   }
 
   &calendar{
@@ -268,7 +354,7 @@ export default {
 
     &-ticket-link {
       position: absolute;
-      top: 0;
+      top: 1px;
       display: flex;
       font-size: 0.8em;
       background-color: #9E9E9E;
