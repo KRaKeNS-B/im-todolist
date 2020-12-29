@@ -1,6 +1,7 @@
 const constants = {
   defaultTask: {
     text: '',
+    anchorText: null,
     message: {
       id: null,
     },

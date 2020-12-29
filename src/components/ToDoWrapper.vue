@@ -277,10 +277,17 @@ export default {
       }
     }
 
-    &-input, &-text {
+    &-text-wrapper {
+      width: 100%;
+      margin: 0 20px 0 10px;
+    }
+
+    &-input,
+    &-text,
+    &-anchor-text {
       font-size: 16px;
       font-family: Roboto, sans-serif;
-      padding: 10px 17px 10px 12px;
+      padding: 10px 0;
       -webkit-font-smoothing: antialiased;
       font-weight: 400;
       box-shadow: none;
@@ -299,6 +306,7 @@ export default {
 
     &-input_textarea {
       overflow: hidden;
+      display: block;
     }
 
     &-text {
@@ -306,6 +314,17 @@ export default {
       word-wrap: break-word;
       word-break: break-word;
       white-space: pre-line;
+
+      &_empty {
+        color: #b0bec5;
+      }
+    }
+
+    &-anchor-text {
+      border-top: 1px solid #9e9e9e;
+      color: #b0bec5;
+      font-size: 13px;
+      line-height: 16px;
     }
 
     &_done {
@@ -357,7 +376,7 @@ export default {
       top: 1px;
       display: flex;
       font-size: 0.8em;
-      background-color: #9E9E9E;
+      background-color: #b0bec5;
       padding: 0 5px;
       line-height: 1em;
       border-radius: 0 0 4px 4px;

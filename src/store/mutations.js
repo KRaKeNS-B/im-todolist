@@ -1,4 +1,5 @@
 import constants from '@/store/constants';
+import taskDataChecker from '@/helpers/taskDataChecker';
 
 const mutations = {
   addNewTask(state) {
@@ -10,7 +11,7 @@ const mutations = {
   },
   addTask(state, task) {
     if (task) {
-      state.taskList.unshift(task);
+      state.taskList.unshift(taskDataChecker(task));
     }
   },
   updateNewTaskText(state, text) {
@@ -19,36 +20,7 @@ const mutations = {
   updateTaskList(state, taskList) {
     state.taskList = taskList
       .filter((task) => (task || false))
-      .map(({
-        text = '',
-        messageId = null,
-        message = {
-          id: null,
-        },
-        ticketId = null,
-        ticket = {
-          id: null,
-          publicId: null,
-        },
-        groupId = null,
-        group = {
-          id: null,
-          name: null,
-        },
-        done = false,
-        doneTime = -1,
-        important = false,
-        id = new Date().getTime(),
-      }) => ({
-        text,
-        message: message.id ? message : { id: messageId },
-        ticket: ticket.id ? ticket : { id: ticketId, publicId: null },
-        group: group.id ? group : { id: groupId, name: null },
-        done,
-        doneTime,
-        important,
-        id,
-      }));
+      .map(taskDataChecker);
   },
   setLastContextmenuEvent(state, event) {
     state.lastContextmenuEvent = event;

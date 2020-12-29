@@ -24,27 +24,41 @@
 
     <input type="checkbox" v-model="done">
 
-    <span
-      class="todolist__task-text"
-      :class="{'todolist__task_done': done}"
-      @click="onTaskTextClick"
-      v-if="!editing"
-    >
-      {{text}}
-    </span>
+    <div class="todolist__task-text-wrapper">
+      <div
+        class="todolist__task-text"
+        :class="{
+          'todolist__task_done': done && text,
+          'todolist__task-text_empty': !text,
+        }"
+        @click="onTaskTextClick"
+        v-if="!editing"
+      >
+        {{text || 'Добавьте комментарий...'}}
+      </div>
+      <textarea
+        v-else
+        type="text"
+        v-model="text"
+        class="todolist__task-input todolist__task-input_textarea"
+        rows="1"
+        ref="input"
+        placeholder="Текст задачи"
+        @blur="onBlur"
+        :style="inputStyle"
+      ></textarea>
 
-    <textarea
-      v-else
-      :class="{'todolist__task_done': done}"
-      type="text"
-      v-model="text"
-      class="todolist__task-input todolist__task-input_textarea"
-      rows="1"
-      ref="input"
-      placeholder="Текст задачи"
-      @blur="onBlur"
-      :style="inputStyle"
-    ></textarea>
+      <div
+        v-if="task.anchorText"
+        class="todolist__task-anchor-text"
+        :class="{
+          'todolist__task_done': done,
+        }"
+        @click="openParentTask"
+      >
+        {{task.anchorText}}...
+      </div>
+    </div>
 
     <i
       class="todolist__task-flag"
@@ -131,7 +145,6 @@ export default {
       this.$store.dispatch('saveTasksToLocalStorage');
     },
     onTaskTextClick() {
-      if (this.done) return;
       this.editing = true;
       this.$nextTick(() => {
         this.resizeTextarea();

@@ -10,26 +10,20 @@ const actions = {
     });
   },
   addNewTaskByMessage({ dispatch, commit }, {
-    message = { id: null },
+    message,
     messageText,
-    ticket = {
-      id: null,
-      publicId: null,
-    },
-    group = {
-      id: null,
-      name: null,
-    },
+    ticket,
+    group,
   }) {
     const taskId = new Date().getTime();
 
+    const shortMessageText = messageText.match(/^(?:.{0,67}(?=\s|$)|\S{0,67})/s);
+
     const task = {
-      text: messageText,
+      anchorText: shortMessageText ? shortMessageText[0] : null,
       message,
       ticket,
       group,
-      done: false,
-      important: false,
       id: taskId,
     };
 

@@ -7,13 +7,15 @@
     >
       <span></span><span></span>
     </div>
-    <input
-      type="text"
-      v-model="newTaskText"
-      class="todolist__task-input"
-      placeholder="Добавить задачу"
-      @keydown.enter="addNewTask"
-    >
+    <div class="todolist__task-text-wrapper">
+      <input
+        type="text"
+        v-model="newTaskText"
+        class="todolist__task-input"
+        placeholder="Добавить задачу"
+        @keydown.enter="addNewTask"
+      >
+    </div>
   </div>
 </template>
 
