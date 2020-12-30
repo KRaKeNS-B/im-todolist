@@ -41,6 +41,10 @@ export default {
       if (index === 0) return 'dot-last';
       return 'dot-invisible';
     },
+    getTaskText(task) {
+      if (!task.text) return task.anchorText.length > 20 ? `${task.anchorText.substr(0, 20)}...` : task.anchorText;
+      return task.text.length > 20 ? `${task.text.substr(0, 20)}...` : task.text;
+    },
   },
   computed: {
     tasksDone() {
@@ -53,17 +57,28 @@ export default {
       ));
     },
     attributes() {
+      const days = {};
+      this.tasksDone.forEach((task) => {
+        const date = new Date();
+        date.setTime(task.doneTime > 0 ? task.doneTime : task.id);
+        if (!days[date.getDate()]) days[date.getDate()] = [];
+        days[date.getDate()].push(task);
+      });
+
       const result = [];
-      this.tasksDone.forEach((task, index) => {
-        result.push({
-          dates: this.getDate(task.doneTime > 0 ? task.doneTime : task.id),
-          dot: {
-            color: 'red',
-            class: this.getDotClass(index),
-          },
-          popover: {
-            label: task.text.length > 30 ? `${task.text.substr(0, 30)}...` : task.text,
-          },
+
+      Object.keys(days).forEach((date) => {
+        days[date].forEach((task, index) => {
+          result.push({
+            dates: this.getDate(task.doneTime > 0 ? task.doneTime : task.id),
+            dot: {
+              color: 'red',
+              class: this.getDotClass(index),
+            },
+            popover: {
+              label: this.getTaskText(task),
+            },
+          });
         });
       });
       return result;
