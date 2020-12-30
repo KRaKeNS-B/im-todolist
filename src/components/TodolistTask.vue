@@ -302,11 +302,11 @@ export default {
       });
     },
   },
-  mounted() {
-    this.inited = false;
+  async mounted() {
     this.text = this.task.text;
     this.done = this.task.done;
     this.isLastNewTaskId();
+    await this.$nextTick();
     this.inited = true;
   },
 };
