@@ -125,6 +125,8 @@ async function waitTicket(ticketId) {
 }
 
 async function goToMessage(ticketNode, messageId) {
+  if (!messageId) return false;
+
   if (!scrollToMessage(messageId)) {
     const messageListNode = ticketNode.querySelector('.messages-list');
     if (messageListNode) {
