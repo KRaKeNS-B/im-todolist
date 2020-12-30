@@ -41,6 +41,10 @@ export default {
       if (index === 0) return 'dot-last';
       return 'dot-invisible';
     },
+    getTaskText(task) {
+      if (!task.text) return task.anchorText.length > 20 ? `${task.anchorText.substr(0, 20)}...` : task.anchorText;
+      return task.text.length > 20 ? `${task.text.substr(0, 20)}...` : task.text;
+    },
   },
   computed: {
     tasksDone() {
@@ -72,7 +76,7 @@ export default {
               class: this.getDotClass(index),
             },
             popover: {
-              label: task.text.length > 20 ? `${task.text.substr(0, 20)}...` : task.text,
+              label: this.getTaskText(task),
             },
           });
         });
