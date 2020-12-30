@@ -51,6 +51,7 @@ export default {
         case 'taskListSaved':
           if (request.taskList) {
             this.$store.commit('updateTaskList', request.taskList);
+            this.addBookmarkIconToTickets();
           }
           break;
         case 'getMessageData':
@@ -138,12 +139,17 @@ export default {
     },
     getTasksInCurrentGroup() {
       const groupNode = document.querySelector('.group-list__group.active');
-      const currentGroupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
 
-      const tasksInGroup = this.$store.state.taskList
-        .filter((task) => task.group.id === currentGroupId && task.done === false);
+      if (groupNode) {
+        const currentGroupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
 
-      return tasksInGroup;
+        const tasksInGroup = this.$store.state.taskList
+          .filter((task) => task.group.id === currentGroupId && task.done === false);
+
+        return tasksInGroup;
+      }
+
+      return [];
     },
     addBookmarkIconToTicket(ticketNode) {
       const iconWrapper = ticketNode.querySelector('.ticket__action-icons');
@@ -205,8 +211,8 @@ export default {
     &:before {
       content: '';
       position: absolute;
-      width: 0px;
-      height: 0px;
+      width: 0;
+      height: 0;
       border-bottom: 15px solid transparent;
     }
 

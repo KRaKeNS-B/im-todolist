@@ -97,7 +97,7 @@ export default {
     return {
       text: '',
       done: false,
-      hideTimeout: null,
+      doneTimeout: null,
       editing: false,
       inputStyle: '',
       inited: false,
@@ -119,7 +119,7 @@ export default {
       if (val) {
         this.startFinishingTask();
       } else {
-        if (this.hideTimeout) clearTimeout(this.hideTimeout);
+        if (this.doneTimeout) clearTimeout(this.doneTimeout);
         this.task.done = false;
         this.task.doneTime = -1;
         this.$store.dispatch('saveTasksToLocalStorage');
@@ -136,8 +136,8 @@ export default {
       this.$store.dispatch('saveTasksToLocalStorage');
     },
     startFinishingTask() {
-      if (this.hideTimeout) clearTimeout(this.hideTimeout);
-      this.hideTimeout = setTimeout(this.finishTask, 1000);
+      if (this.doneTimeout) clearTimeout(this.doneTimeout);
+      this.doneTimeout = setTimeout(this.finishTask, 1000);
     },
     finishTask() {
       this.task.done = true;
