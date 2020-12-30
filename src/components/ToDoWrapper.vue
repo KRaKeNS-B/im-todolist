@@ -398,5 +398,9 @@ export default {
       }
     }
   }
+
+  &highlighted-message {
+    box-shadow: inset 5px 0 0 #febe10;
+  }
 }
 </style>

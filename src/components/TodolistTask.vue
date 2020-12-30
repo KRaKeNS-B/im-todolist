@@ -211,6 +211,28 @@ export default {
 
       return true;
     },
+    scrollToMessage(messageId) {
+      const targetMessageNode = this.getMessageNode(messageId);
+
+      if (targetMessageNode) {
+        this.highlightMessageForTime(targetMessageNode);
+
+        targetMessageNode.scrollIntoView();
+        return true;
+      }
+      return false;
+    },
+    highlightMessageForTime(messageNode) {
+      this.enableHighlightMessage(messageNode);
+
+      setTimeout(() => this.disableHighlightMessage(messageNode), 10000);
+    },
+    enableHighlightMessage(messageNode) {
+      messageNode.classList.add('todolist__highlighted-message');
+    },
+    disableHighlightMessage(messageNode) {
+      messageNode.classList.remove('todolist__highlighted-message');
+    },
     getTicketGroupNode(groupId) {
       return document.querySelector(`#group-list__group_id_${groupId}`);
     },
@@ -242,15 +264,6 @@ export default {
           searchBtn.click();
         }
       }
-    },
-    scrollToMessage(messageId) {
-      const targetMessageNode = this.getMessageNode(messageId);
-
-      if (targetMessageNode) {
-        targetMessageNode.scrollIntoView();
-        return true;
-      }
-      return false;
     },
     async goToTicketGroup(groupId) {
       const targetGroupNode = this.getTicketGroupNode(groupId);
