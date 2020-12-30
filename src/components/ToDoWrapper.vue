@@ -126,6 +126,18 @@ export default {
 
       this.ticketListObserver.observe(target, observerConfig);
     },
+    openTodolistHandler(payload) {
+      switch (payload.type) {
+        case 'FOCUS_TASK':
+          this.openTodolist();
+          this.$nextTick(() => {
+            EventBus.$emit('FOCUS_TASK', payload.taskId);
+          });
+          break;
+        default:
+          break;
+      }
+    },
   },
   mounted() {
     this.$store.dispatch('getTaskList');
@@ -133,7 +145,7 @@ export default {
     document.addEventListener('contextmenu', this.onContextMenuEvent);
 
     chrome.runtime.onMessage.addListener(this.handleBackgroundRequest);
-    EventBus.$on('OPEN_TODOLIST', this.openTodolist);
+    EventBus.$on('OPEN_TODOLIST', this.openTodolistHandler);
 
     this.observeTicketList();
   },

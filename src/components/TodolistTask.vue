@@ -4,8 +4,10 @@
     :class="{
       'todolist__task_active': editing,
       'todolist__task-ticket-link_active': isTaskHasLinkToTicket,
+      'todolist__highlighted-message': isFocused,
     }"
     @contextmenu.prevent="openParentTicket"
+    ref="task"
   >
     <div
       class="todolist__task-ticket-link"
@@ -88,6 +90,7 @@
 
 <script>
 import openParentTicketHelper from '@/helpers/openParentTicket';
+import EventBus from '@/components/eventBus';
 
 export default {
   name: 'TodolistTask',
@@ -99,6 +102,7 @@ export default {
       editing: false,
       inputStyle: '',
       inited: false,
+      isFocused: false,
     };
   },
   props: {
@@ -170,13 +174,34 @@ export default {
     openParentTicket() {
       openParentTicketHelper(this.task);
     },
+    focusTask(taskId) {
+      if (taskId === this.task.id) {
+        console.log(taskId);
+        this.$refs.task.scrollIntoView();
+        this.isFocused = true;
+
+        setTimeout(() => {
+          this.isFocused = false;
+        }, 5000);
+      } else {
+        this.isFocused = false;
+      }
+    },
+    async initTask() {
+      await this.$nextTick();
+      this.inited = true;
+    },
   },
-  async mounted() {
+  mounted() {
     this.text = this.task.text;
     this.done = this.task.done;
     this.isLastNewTaskId();
-    await this.$nextTick();
-    this.inited = true;
+    this.initTask();
+
+    EventBus.$on('FOCUS_TASK', this.focusTask);
+  },
+  beforeDestroy() {
+    EventBus.$off('FOCUS_TASK', this.focusTask);
   },
 };
 </script>

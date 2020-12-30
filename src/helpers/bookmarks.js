@@ -1,4 +1,5 @@
 import { goToMessage } from '@/helpers/openParentTicket';
+import EventBus from '@/components/eventBus';
 
 function addBookmarkIconToTickets(taskList) {
   delOldBookmarks();
@@ -11,7 +12,7 @@ function addBookmarkIconToTickets(taskList) {
     if (!tasksInCurrentGroup[ticketId]) {
       tasksInCurrentGroup[ticketId] = [];
     }
-    tasksInCurrentGroup[ticketId].push(task.message.id);
+    tasksInCurrentGroup[ticketId].push(task);
   });
 
   const openedTickets = [...document.querySelectorAll('.ticket')];
@@ -43,26 +44,16 @@ function getTasksInCurrentGroup(taskList) {
   return [];
 }
 
-function addBookmarkIconToTheTicket(ticketNode, messagesId) {
+function addBookmarkIconToTheTicket(ticketNode, tasks) {
   const iconsWrapper = ticketNode.querySelector('.ticket__action-icons');
 
   if (iconsWrapper) {
     const bookmarkIcon = iconsWrapper.querySelector('.todolist__bookmark-icon');
 
     if (!bookmarkIcon) {
-      const iconNode = createBookmarkIconNode(messagesId.length);
+      let iconNode = createBookmarkIconNode(tasks.length);
 
-      let currentMessageIndex = 0;
-
-      iconNode.addEventListener('click', () => {
-        goToMessage(ticketNode, messagesId[currentMessageIndex]);
-
-        if (currentMessageIndex < messagesId.length - 1) {
-          currentMessageIndex += 1;
-        } else {
-          currentMessageIndex = 0;
-        }
-      });
+      iconNode = addClickEventToBookmark(ticketNode, tasks, iconNode);
 
       iconsWrapper.prepend(iconNode);
     }
@@ -84,6 +75,27 @@ function createBookmarkIconNode(tasksNum) {
   iconWrapper.append(textNode);
 
   return iconWrapper;
+}
+
+function addClickEventToBookmark(ticketNode, tasks, iconNode) {
+  let currentMessageIndex = 0;
+
+  iconNode.addEventListener('click', () => {
+    goToMessage(ticketNode, tasks[currentMessageIndex].message.id);
+
+    EventBus.$emit('OPEN_TODOLIST', {
+      type: 'FOCUS_TASK',
+      taskId: tasks[currentMessageIndex].id,
+    });
+
+    if (currentMessageIndex < tasks.length - 1) {
+      currentMessageIndex += 1;
+    } else {
+      currentMessageIndex = 0;
+    }
+  });
+
+  return iconNode;
 }
 
 function throttleDecorator(func, ms) {
