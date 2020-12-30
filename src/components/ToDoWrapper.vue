@@ -21,6 +21,7 @@ import TaskList from '@/components/TaskList';
 import ToDoTabs from '@/components/ToDoTabs';
 import ToDoTab from '@/components/ToDoTab';
 import ToDoCalendar from '@/components/ToDoCalendar';
+import addBookmarkIconToTickets from '@/helpers/bookmarks';
 
 export default {
   name: 'ToDoWrapper',
@@ -51,7 +52,7 @@ export default {
         case 'taskListSaved':
           if (request.taskList) {
             this.$store.commit('updateTaskList', request.taskList);
-            this.addBookmarkIconToTickets();
+            addBookmarkIconToTickets(this.$store.state.taskList);
           }
           break;
         case 'getMessageData':
@@ -115,63 +116,18 @@ export default {
 
       const observerConfig = {
         childList: true,
-        subtree: true,
       };
 
       this.ticketListObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'childList') {
-            this.addBookmarkIconToTickets();
+            console.log('observeTicketList');
+            addBookmarkIconToTickets(this.$store.state.taskList);
           }
         });
       });
 
       this.ticketListObserver.observe(target, observerConfig);
-    },
-    addBookmarkIconToTickets() {
-      const tasksInCurrentGroup = this.getTasksInCurrentGroup()
-        .map((task) => `ticket-${task.ticket.id}`);
-
-      const openedTickets = [...document.querySelectorAll('.ticket')];
-
-      openedTickets.filter((el) => tasksInCurrentGroup.includes(el.id))
-        .forEach(this.addBookmarkIconToTicket);
-    },
-    getTasksInCurrentGroup() {
-      const groupNode = document.querySelector('.group-list__group.active');
-
-      if (groupNode) {
-        const currentGroupId = groupNode.id.match(/group-list__group_id_(\d+)/)[1];
-
-        const tasksInGroup = this.$store.state.taskList
-          .filter((task) => task.group.id === currentGroupId && task.done === false);
-
-        return tasksInGroup;
-      }
-
-      return [];
-    },
-    addBookmarkIconToTicket(ticketNode) {
-      const iconWrapper = ticketNode.querySelector('.ticket__action-icons');
-
-      if (iconWrapper) {
-        const bookmarkIcon = iconWrapper.querySelector('.todolist__bookmark-icon');
-
-        if (!bookmarkIcon) {
-          iconWrapper.prepend(this.createBookmarkIconNode());
-        }
-      }
-    },
-    createBookmarkIconNode() {
-      const iconWrapper = document.createElement('span');
-      iconWrapper.className = 'ticket__action-icons__icon ticket__users-icon-block';
-
-      const iconNode = document.createElement('span');
-      iconNode.className = 'todolist__bookmark-icon';
-
-      iconWrapper.append(iconNode);
-
-      return iconWrapper;
     },
   },
   mounted() {
@@ -202,26 +158,37 @@ export default {
     overflow: hidden;
   }
 
-  &bookmark-icon {
-    position: relative;
-    width: 12px;
-    height: 15px;
+  &bookmark {
+    cursor: pointer;
 
-    &:after,
-    &:before {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-bottom: 15px solid transparent;
+    &-text {
+      min-height: 1em;
+      line-height: 1em;
     }
 
-    &:after {
-      border-right: 12px solid #febe10;
-    }
+    &-icon {
+      position: relative;
+      width: 12px;
+      height: 15px;
+      padding-top: 5px;
 
-    &:before {
-      border-left: 12px solid #febe10;
+      &:after,
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        width: 0;
+        height: 0;
+        border-bottom: 15px solid transparent;
+      }
+
+      &:after {
+        border-right: 12px solid #FEBE10;
+      }
+
+      &:before {
+        border-left: 12px solid #FEBE10;
+      }
     }
   }
 
@@ -401,6 +368,11 @@ export default {
 
   &highlighted-message {
     box-shadow: inset 5px 0 0 #febe10;
+    transition: box-shadow .5s;
+
+    &_end {
+      transition: box-shadow 1s;
+    }
   }
 }
 </style>

@@ -5,12 +5,12 @@
       'todolist__task_active': editing,
       'todolist__task-ticket-link_active': isTaskHasLinkToTicket,
     }"
-    @contextmenu.prevent="openParentTask"
+    @contextmenu.prevent="openParentTicket"
   >
     <div
       class="todolist__task-ticket-link"
       v-if="isTaskHasLinkToTicket"
-      @click="openParentTask"
+      @click="openParentTicket"
     >
       <div class="todolist__task-ticket-link-group">
         {{task.group.name || 'Устарел'}}
@@ -38,7 +38,6 @@
       </div>
       <textarea
         v-else
-        type="text"
         v-model="text"
         class="todolist__task-input todolist__task-input_textarea"
         rows="1"
@@ -54,7 +53,7 @@
         :class="{
           'todolist__task_done': done,
         }"
-        @click="openParentTask"
+        @click="openParentTicket"
       >
         {{task.anchorText}}...
       </div>
@@ -68,13 +67,10 @@
       <svg
         class="todolist__task-flag-svg"
         :class="{'todolist__task-flag-svg_active': task.important}"
-        version="1.1"
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         x="0px"
         y="0px"
         viewBox="0 0 492.771 492.771"
-        style="enable-background:new 0 0 492.771 492.771;"
         xml:space="preserve"
       >
         <path
@@ -91,6 +87,8 @@
 </template>
 
 <script>
+import openParentTicketHelper from '@/helpers/openParentTicket';
+
 export default {
   name: 'TodolistTask',
   data() {
@@ -169,150 +167,8 @@ export default {
         this.onTaskTextClick();
       }
     },
-    async openParentTask() {
-      if (await this.goToTicketGroup(this.task.group.id)) {
-        this.closeSearch();
-        await this.timeout(200);
-
-        if (await this.goToTicket(this.getTicketNode(this.task.ticket.id))) {
-          return;
-        }
-
-        this.findTicket(this.task.ticket.publicId);
-
-        await this.goToTicket(await this.waitTicket(this.task.ticket.id));
-      }
-    },
-    closeSearch() {
-      const closeBtn = document.querySelector('.search-bar__search-icon_close');
-      if (closeBtn) {
-        closeBtn.click();
-      }
-    },
-    async goToTicket(ticketNode) {
-      if (ticketNode) {
-        ticketNode.scrollIntoView({ block: 'start', inline: 'start' });
-        const isMessageFound = await this.goToMessage(ticketNode);
-        return isMessageFound;
-      }
-      return false;
-    },
-    async goToMessage(ticketNode) {
-      if (!this.scrollToMessage(this.task.message.id)) {
-        const messageListNode = ticketNode.querySelector('.messages-list');
-        if (messageListNode) {
-          messageListNode.scrollTop = 0;
-        }
-
-        return new Promise((resolve) => {
-          setTimeout(async () => { resolve(await this.goToMessage(ticketNode)); }, 200);
-        });
-      }
-
-      return true;
-    },
-    scrollToMessage(messageId) {
-      const targetMessageNode = this.getMessageNode(messageId);
-
-      if (targetMessageNode) {
-        this.highlightMessageForTime(targetMessageNode);
-
-        targetMessageNode.scrollIntoView();
-        return true;
-      }
-      return false;
-    },
-    highlightMessageForTime(messageNode) {
-      this.enableHighlightMessage(messageNode);
-
-      setTimeout(() => this.disableHighlightMessage(messageNode), 10000);
-    },
-    enableHighlightMessage(messageNode) {
-      messageNode.classList.add('todolist__highlighted-message');
-    },
-    disableHighlightMessage(messageNode) {
-      messageNode.classList.remove('todolist__highlighted-message');
-    },
-    getTicketGroupNode(groupId) {
-      return document.querySelector(`#group-list__group_id_${groupId}`);
-    },
-    getTicketNode(ticketId) {
-      return document.querySelector(`#ticket-${ticketId}`);
-    },
-    getMessageNode(messageId) {
-      return document.querySelector(`#message-${messageId}`);
-    },
-    findTicket(ticketId) {
-      if (!ticketId) return;
-
-      const searchInput = document.querySelector('#search-bar__input');
-
-      if (searchInput) {
-        searchInput.value = `${ticketId}`;
-
-        if ('createEvent' in document) {
-          const evt = document.createEvent('HTMLEvents');
-          evt.initEvent('input', false, true);
-          searchInput.dispatchEvent(evt);
-        } else {
-          searchInput.fireEvent('oninput');
-        }
-
-        const searchBtn = document.querySelector('.search-bar__search-icon_search');
-
-        if (searchBtn) {
-          searchBtn.click();
-        }
-      }
-    },
-    async goToTicketGroup(groupId) {
-      const targetGroupNode = this.getTicketGroupNode(groupId);
-
-      if (targetGroupNode) {
-        if (targetGroupNode.classList.contains('active')) {
-          return true;
-        }
-
-        targetGroupNode.click();
-        await this.timeout();
-
-        return true;
-      }
-
-      return false;
-    },
-    timeout(ms = 500) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
-    },
-    async waitTicket(ticketId) {
-      const target = document.querySelector('.tickets-list__scroll-area');
-
-      const rejectTime = 5000;
-
-      return new Promise((resolve) => {
-        const observerConfig = {
-          childList: true,
-          subtree: true,
-        };
-        const observer = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === 'childList') {
-              const ticketNode = this.getTicketNode(ticketId);
-
-              if (ticketNode) {
-                observer.disconnect();
-                resolve(ticketNode);
-              }
-            }
-          });
-        });
-
-        window.setTimeout(() => {
-          resolve(false);
-        }, rejectTime);
-
-        observer.observe(target, observerConfig);
-      });
+    openParentTicket() {
+      openParentTicketHelper(this.task);
     },
   },
   async mounted() {
