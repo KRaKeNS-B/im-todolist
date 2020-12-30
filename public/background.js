@@ -7,7 +7,6 @@ function handleContentRequest(request, sender) {
       });
     });
   } else if (request.type === 'getTaskList') {
-    // chrome.storage.local.clear();
     chrome.storage.local.get('taskList', (result) => {
       chrome.tabs.sendMessage(sender.tab.id, {
         type: 'getTaskList',

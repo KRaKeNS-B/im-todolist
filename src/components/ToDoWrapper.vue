@@ -104,8 +104,6 @@ export default {
         },
       };
 
-      console.log(result);
-
       return result;
     },
     onContextMenuEvent(e) {
@@ -121,7 +119,6 @@ export default {
       this.ticketListObserver = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
           if (mutation.type === 'childList') {
-            console.log('observeTicketList');
             addBookmarkIconToTickets(this.$store.state.taskList);
           }
         });

@@ -55,8 +55,6 @@ function addBookmarkIconToTheTicket(ticketNode, messagesId) {
       let currentMessageIndex = 0;
 
       iconNode.addEventListener('click', () => {
-        console.log('scrollToMessage', messagesId[currentMessageIndex], currentMessageIndex);
-
         goToMessage(ticketNode, messagesId[currentMessageIndex]);
 
         if (currentMessageIndex < messagesId.length - 1) {
@@ -88,4 +86,33 @@ function createBookmarkIconNode(tasksNum) {
   return iconWrapper;
 }
 
-export default addBookmarkIconToTickets;
+function throttleDecorator(func, ms) {
+  let isThrottled = false;
+  let savedArgs;
+  let savedThis;
+
+  function wrapper(...args) {
+    if (isThrottled) {
+      savedArgs = args;
+      savedThis = this;
+      return;
+    }
+
+    func.apply(this, args);
+
+    isThrottled = true;
+
+    setTimeout(() => {
+      isThrottled = false;
+      if (savedArgs) {
+        wrapper.apply(savedThis, savedArgs);
+        savedArgs = null;
+        savedThis = null;
+      }
+    }, ms);
+  }
+
+  return wrapper;
+}
+
+export default throttleDecorator(addBookmarkIconToTickets, 500);
