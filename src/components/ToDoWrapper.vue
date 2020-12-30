@@ -126,7 +126,7 @@ export default {
 
       this.ticketListObserver.observe(target, observerConfig);
     },
-    openTodolistHandler(payload) {
+    openTodolistHandler(payload = { type: null }) {
       switch (payload.type) {
         case 'FOCUS_TASK':
           this.openTodolist();
@@ -135,6 +135,7 @@ export default {
           });
           break;
         default:
+          this.openTodolist();
           break;
       }
     },

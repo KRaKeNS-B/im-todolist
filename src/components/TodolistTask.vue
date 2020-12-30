@@ -176,7 +176,6 @@ export default {
     },
     focusTask(taskId) {
       if (taskId === this.task.id) {
-        console.log(taskId);
         this.$refs.task.scrollIntoView();
         this.isFocused = true;
 
