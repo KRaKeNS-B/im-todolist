@@ -14,7 +14,7 @@ function removeUndefinedAttributes(object) {
 
 export default function (task) {
   return {
-    ...constants.defaultTask,
+    ...constants.defaultTask(),
     ...(removeUndefinedAttributes(task)),
     id: task.id ? task.id : new Date().getTime(),
   };
