@@ -1,34 +1,24 @@
 <template>
-    <div v-show="isActive" class="tab-container">
-      <slot></slot>
-    </div>
+  <div v-show="isActive" class="tab-container">
+    <slot></slot>
+  </div>
 </template>
 
 <script>
 export default {
+  name: 'ToDoTab',
   props: {
-    name: { required: true },
-    selected: { default: false },
-  },
-  data() {
-    return {
-      isActive: false,
-    };
-  },
-  computed: {
-    href() {
-      return '#ref';
+    isActive: {
+      type: Boolean,
+      default: false,
     },
-  },
-  mounted() {
-    this.isActive = this.selected;
   },
 };
 </script>
 <style scoped>
-  .tab-container{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
+.tab-container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 </style>

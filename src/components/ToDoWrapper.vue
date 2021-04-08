@@ -1,12 +1,15 @@
 <template>
   <div class="todolist__wrapper profile" v-if="isOpen">
     <ToDoHeader @click="closeTodolist" />
-    <ToDoTabs>
-      <ToDoTab name="ToDo" :selected="true">
+    <ToDoTabs
+      v-model="currentTab"
+      :tabs="tabs"
+    >
+      <ToDoTab :is-active="isActiveTab(tabs[0])">
         <NewTaskInput />
         <TaskList />
       </ToDoTab>
-      <ToDoTab name="Календарь">
+      <ToDoTab :is-active="isActiveTab(tabs[1])">
         <ToDoCalendar class="todolist__calendar"/>
       </ToDoTab>
     </ToDoTabs>
@@ -35,11 +38,19 @@ export default {
   },
   data() {
     return {
+      tabs: [
+        { title: 'ToDo' },
+        { title: 'Календарь' },
+      ],
+      currentTab: null,
       isOpen: false,
       ticketListObserver: null,
     };
   },
   methods: {
+    isActiveTab(tab) {
+      return tab === this.currentTab;
+    },
     openTodolist() {
       this.isOpen = true;
     },
