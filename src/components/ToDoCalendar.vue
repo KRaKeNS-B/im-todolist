@@ -61,7 +61,7 @@ export default {
       this.tasksDone.forEach((task) => {
         const date = new Date();
         date.setTime(task.doneTime > 0 ? task.doneTime : task.id);
-        const key = date.getDate() + date.getMonth() + date.getFullYear();
+        const key = `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
         if (!days[key]) days[key] = [];
         days[key].push(task);
       });
