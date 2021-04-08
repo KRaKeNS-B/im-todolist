@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DatePicker class="calendar" v-model="date" :attributes="this.attributes"/>
+    <DatePicker class="calendar" v-model="date" :attributes="attributes" />
 
     <div class="calendar-task-container">
       <TodolistTask
@@ -13,11 +13,11 @@
 </template>
 
 <script>
-// import Calendar from 'v-calendar/lib/components/calendar.umd';
 import DatePicker from 'v-calendar/lib/components/date-picker.umd';
 import TodolistTask from '@/components/TodolistTask';
 
 export default {
+  name: 'ToDoCalendar',
   components: {
     DatePicker,
     TodolistTask,
@@ -27,34 +27,13 @@ export default {
       date: new Date(),
     };
   },
-  methods: {
-    getDate(timestamp) {
-      const date = new Date();
-      date.setTime(timestamp);
-      return date;
-    },
-    isCurrentDate(timestamp) {
-      if (!this.date) return false;
-      return this.date.getDate() === this.getDate(timestamp).getDate();
-    },
-    getDotClass(index) {
-      if (index === 0) return 'dot-last';
-      return 'dot-invisible';
-    },
-    getTaskText(task) {
-      if (!task.text) return task.anchorText.length > 20 ? `${task.anchorText.substr(0, 20)}...` : task.anchorText;
-      return task.text.length > 20 ? `${task.text.substr(0, 20)}...` : task.text;
-    },
-  },
   computed: {
     tasksDone() {
       return this.$store.state.taskList.filter((task) => task.done);
     },
     tasksDoneInCurrentDate() {
-      return this.$store.state.taskList.filter((task) => (
-        task.done
-        && this.isCurrentDate(task.doneTime > 0 ? task.doneTime : task.id)
-      ));
+      return this.tasksDone
+        .filter((task) => (this.isCurrentDate(task.doneTime > 0 ? task.doneTime : task.id)));
     },
     attributes() {
       const days = {};
@@ -82,24 +61,41 @@ export default {
           });
         });
       });
-      return result;
+  methods: {
+    getDate(timestamp) {
+      return new Date(timestamp);
+    },
+    isCurrentDate(timestamp) {
+      if (!this.date) return false;
+      return this.date.getDate() === this.getDate(timestamp).getDate();
+    },
+    getDotClass(index) {
+      return index === 0 ? 'dot-last' : 'dot-invisible';
+    },
+    getTaskText(task) {
+      const text = task.text ? task.text : task.anchorText;
+
+      return text.length > 20 ? `${text.substr(0, 20)}...` : text;
     },
   },
 };
 </script>
 
 <style>
-  .calendar{
-    width: 100% !important;
-  }
-  .dot-invisible{
-    display: none;
-  }
-  .dot-last{
-    margin: 0 0 22px 22px !important;
-  }
-  .calendar-task-container{
-    overflow: auto;
-    margin: 0 5px 0 0;
-  }
+.calendar {
+  width: 100% !important;
+}
+
+.dot-invisible {
+  display: none;
+}
+
+.dot-last {
+  margin: 0 0 22px 22px !important;
+}
+
+.calendar-task-container {
+  overflow: auto;
+  margin: 0 5px 0 0;
+}
 </style>
