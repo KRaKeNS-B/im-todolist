@@ -1,13 +1,12 @@
+import addBookmarkIconToTickets from '@/helpers/bookmarks';
+
 const actions = {
   addNewTask({ commit, dispatch }) {
     commit('addNewTask');
     dispatch('saveTasksToLocalStorage');
   },
   saveTasksToLocalStorage({ state }) {
-    chrome.runtime.sendMessage({
-      type: 'saveTaskList',
-      taskList: state.taskList,
-    });
+    chrome.storage.local.set({ taskList: state.taskList });
   },
   addNewTaskByMessage({ dispatch, commit }, {
     message,
@@ -37,9 +36,12 @@ const actions = {
 
     dispatch('saveTasksToLocalStorage');
   },
-  getTaskList() {
-    chrome.runtime.sendMessage({
-      type: 'getTaskList',
+  getTaskList({ commit, state }) {
+    chrome.storage.local.get('taskList', (result) => {
+      if (result.taskList) {
+        commit('updateTaskList', result.taskList);
+        addBookmarkIconToTickets(state.taskList);
+      }
     });
   },
   moveTaskToNewPosition({ state, dispatch, commit }, { newIndex, oldIndex }) {

@@ -1,20 +1,6 @@
-function handleContentRequest(request, sender) {
-  if (request.type === 'saveTaskList') {
-    chrome.storage.local.set({ taskList: request.taskList }, () => {
-      chrome.tabs.sendMessage(sender.tab.id, {
-        type: 'taskListSaved',
-        taskList: request.taskList,
-      });
-    });
-  } else if (request.type === 'getTaskList') {
-    chrome.storage.local.get('taskList', (result) => {
-      chrome.tabs.sendMessage(sender.tab.id, {
-        type: 'getTaskList',
-        taskList: result.taskList,
-      });
-    });
-  }
-}
+chrome.runtime.onConnect.addListener((port) => {
+  console.log('connected ', port);
+});
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
@@ -37,5 +23,3 @@ chrome.contextMenus.onClicked.addListener(({ menuItemId, selectionText }, tab) =
     });
   }
 });
-
-chrome.runtime.onMessage.addListener(handleContentRequest);

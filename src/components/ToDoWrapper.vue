@@ -53,19 +53,13 @@ export default {
     },
     openTodolist() {
       this.isOpen = true;
+      this.currentTab = this.tabs.find((el) => el.title === 'ToDo');
     },
     closeTodolist() {
       this.isOpen = false;
     },
     handleBackgroundRequest(request) {
       switch (request.type) {
-        case 'getTaskList':
-        case 'taskListSaved':
-          if (request.taskList) {
-            this.$store.commit('updateTaskList', request.taskList);
-            addBookmarkIconToTickets(this.$store.state.taskList);
-          }
-          break;
         case 'getMessageData':
           this.addNewTaskByMessage(request.text);
           break;
