@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "im-todolist",
-  "version": "1.0",
+  "version": "0.1.1",
   "description": "Involta Messenger todolist",
   "content_scripts": [
     {
