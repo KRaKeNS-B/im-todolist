@@ -53,7 +53,7 @@ export function getTaskTimestamp(task) {
 }
 
 function getTaskText(task) {
-  const text = task.text ? task.text : task.anchorText;
+  const text = task.text || task.anchorText || '';
 
   return text.length > 20 ? `${text.substr(0, 20)}...` : text;
 }
